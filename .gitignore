@@ -5,3 +5,4 @@
 /.idea/*
 composer.phar
 /webroot/*
+/docs/_book/*
