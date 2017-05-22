@@ -109,8 +109,8 @@ SEE changelog
 
 ## Credits
 
-MayMeow
-mARTin
+* MayMeow
+* mARTin
 
 ## License
 
