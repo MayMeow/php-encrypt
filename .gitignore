@@ -1,0 +1,7 @@
+/vendor/*
+/tmp/*
+/logs/*
+/.vscode/*
+/.idea/*
+composer.phar
+/webroot/*

@@ -1,0 +1,18 @@
+certificates:
+  ca:
+    daysvalid: 7000
+    x509_extensions: v3_ca
+  intermediate:
+    daysvalid: 3650
+    x509_extensions: v3_intermediate_ca
+  user:
+    daysvalid: 365
+    x509_extensions: usr_cert
+  server:
+    daysvalid: 1825
+    x509_extensions: server_cert
+
+default:
+  private_key_bits: 4096
+  ca_key_cipher: 10321033
+  ica_key_cipher: 10321033

@@ -1,0 +1,20 @@
+{
+    "name": "maymeow/may-encrypt",
+    "description": "Extendable Certificate Authority scirpt made with PHP",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Charlotta Jung",
+            "email": "jungcharlotta@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MayMeow\\": "src"
+        }
+    },
+    "require": {
+        "symfony/yaml": "^3.2"
+    }
+}
