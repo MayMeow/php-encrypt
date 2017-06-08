@@ -269,11 +269,13 @@ class CertificateFactory implements CertificateFactoryInterface
 
         $this->_altConfiguration();
 
-        print_r($this->altNames);
+        //print_r($this->altNames);
 
+        /*
         print_r([
             $this->certConfigure, $this->domainName()->get()
         ]);
+        */
 
         $this->crt->setPrivateKey(openssl_pkey_new($this->certConfigure));
 
