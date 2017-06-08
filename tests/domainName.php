@@ -184,16 +184,15 @@ $cf->setType("server")
     ->sign()->toFile();*/
 
 $cf->domainName()
-    ->setCommonName('3zs-michalovce-krymska')
+    ->setCommonName('MetalPort Puskinova')
     ->setOrganizationalUnitName('VPN')
-    ->setOrganizationName('3 Zakladna Skola Michalovce');
+    ->setOrganizationName('Metalport s.r.o.');
 
 $cf->getAltNames()
-    ->setDns('vpn.zskrymska.sk')
-    ->setIp('46.243.67.151');
+    ->setIp('188.120.15.51');
 
 $cf->setType('server')
-    ->setName('Gnoma/Webpages/3zs-michalovce-moskovska')
+    ->setName('Gnoma/Webpages/metalport-trebisov')
     ->setCa('Gnoma/intermediate', '10321033')
     ->sign()->toFile();
 
