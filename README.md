@@ -16,6 +16,22 @@ $cf = new \MayMeow\Factory\CertificateFactory();
 
 ## Usage
 
+### Path Configuring
+
+To Set different Root path for generated certificates use
+
+```php
+$cf->setDataPath('/your/path/to/folder');
+```
+
+If you want to save templates for generating certificates on different folder you can set this path with:
+
+```php
+$cf->setTemplatesPath('/path/to/templates/folder');
+```
+
+If you don use any of this commands default values will be used.
+
 ### Certificate Signing
 
 1. Create Selfsigned CA

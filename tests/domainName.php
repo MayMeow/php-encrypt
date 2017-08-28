@@ -146,7 +146,7 @@ $server->setType('server', [
     ->setCa('may-intermediate-ca')
     ->sign();*/
 
-$sf = new \MayMeow\Factory\SecurityFactory();
+$sf = new \MayMeow\Factory\SecurityFactory(new \MayMeow\Factory\CertificateFactory());
 
 /*$string = json_encode([
     "name" => 'Hello',
@@ -184,15 +184,19 @@ $cf->setType("server")
     ->sign()->toFile();*/
 
 $cf->domainName()
-    ->setCommonName('MetalPort Puskinova')
-    ->setOrganizationalUnitName('VPN')
-    ->setOrganizationName('Metalport s.r.o.');
+    ->setCommonName('webmail.gnoma.sk')
+    ->setLocalityName('Michalovce')
+    ->setCountryName('SK')
+    ->setOrganizationName('GNOMA s.r.o.');
 
 $cf->getAltNames()
-    ->setIp('188.120.15.51');
+    ->setDns('webmail.gnoma.sk')
+    ->setDns('mail.gnoma.sk')
+    ->setDns('gnoma.sk')
+    ;
 
 $cf->setType('server')
-    ->setName('Gnoma/Webpages/metalport-trebisov')
+    ->setName('Gnoma/Webpages/gnoma-server')
     ->setCa('Gnoma/intermediate', '10321033')
     ->sign()->toFile();
 

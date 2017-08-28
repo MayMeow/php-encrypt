@@ -34,13 +34,20 @@ class SecurityFactory
 
     protected $string;
 
+    protected $certificateFactory;
+
+    public function __construct(CertificateFactory $certificateFactory)
+    {
+        $this->certificateFactory = $certificateFactory;
+    }
+
     /**
      * @param $path
      * @param $pass
      */
     public function setPrivateKey($path, $pass)
     {
-        $privKey = CertificateFactory::getPrivateKey($path,$pass);
+        $privKey = $this->certificateFactory->getPrivateKey($path,$pass);
 
         $this->privateKey = openssl_get_privatekey($privKey[0], $privKey[1]);
     }
@@ -50,7 +57,7 @@ class SecurityFactory
      */
     public function setPublicKey($path)
     {
-        $pubKey = CertificateFactory::getPublicKey($path);
+        $pubKey = $this->certificateFactory->getPublicKey($path);
 
         $this->publicKey = openssl_get_publickey($pubKey);
     }
@@ -64,7 +71,7 @@ class SecurityFactory
 
     public function addRecipientKey($path = null)
     {
-        $this->recipientKeys[] = CertificateFactory::getPublicKey($path);
+        $this->recipientKeys[] = $this->certificateFactory->getPublicKey($path);
 
         return $this;
     }

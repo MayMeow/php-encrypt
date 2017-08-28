@@ -92,16 +92,46 @@ class CertificateFactory implements CertificateFactoryInterface
      *
      * @var array typeConfigurations
      */
-    protected $typeConfigurations = [
-        'ca' => TEMPLATE_ROOT . 'ca_certificate.cnf',
-        'user' => TEMPLATE_ROOT . 'intermediate_certificate.cnf',
-        'server' => TEMPLATE_ROOT . 'intermediate_certificate.cnf',
-        'intermediate' => TEMPLATE_ROOT . 'intermediate_certificate.cnf'
-    ];
+    protected $typeConfigurations;
+
+    /**
+     * Path where stored all certificates
+     * @var string $caDataRoot
+     */
+    protected $caDataRoot;
 
     public function __construct()
     {
         $this->_setConfig();
+
+        $this->_setDataPath(WWW_ROOT);
+
+        $this->_setTemplatesPath(TEMPLATE_ROOT);
+    }
+
+    /**
+     * Set path to CA root data folder
+     *
+     * @param $rootPath
+     */
+    protected function _setDataPath($rootPath)
+    {
+        $this->caDataRoot = $rootPath;
+    }
+
+    /**
+     * Set paths for all templates
+     *
+     * @param $templateRootPath
+     */
+    protected function _setTemplatesPath($templateRootPath)
+    {
+        $this->typeConfigurations = [
+            'ca' => $templateRootPath . 'ca_certificate.cnf',
+            'user' => $templateRootPath . 'intermediate_certificate.cnf',
+            'server' => $templateRootPath . 'intermediate_certificate.cnf',
+            'intermediate' => $templateRootPath . 'intermediate_certificate.cnf'
+        ];
     }
 
     /**
@@ -143,7 +173,7 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     protected function _getCaCert()
     {
-        return file_get_contents(WWW_ROOT . $this->caName . DS .'cert.crt');
+        return file_get_contents($this->caDataRoot . $this->caName . DS .'cert.crt');
     }
 
     /**
@@ -172,6 +202,28 @@ class CertificateFactory implements CertificateFactoryInterface
 
             file_put_contents($altFileName, $cnfFile);
         }
+    }
+
+    /**
+     * @param $path
+     * @return $this
+     */
+    public function setDataPath($path)
+    {
+        $this->_setDataPath($path);
+
+        return $this;
+    }
+
+    /**
+     * @param $path
+     * @return $this
+     */
+    public function setTemplatesPath($path)
+    {
+        $this->_setTemplatesPath($path);
+
+        return $this;
     }
 
     /**
@@ -255,7 +307,7 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     public function setName($name = null)
     {
-        $this->fileName = WWW_ROOT . $name . DS;
+        $this->fileName = $this->caDataRoot . $name . DS;
 
         return $this;
     }
@@ -339,7 +391,7 @@ class CertificateFactory implements CertificateFactoryInterface
             mkdir($this->fileName, 0777, true);
         }
         file_put_contents($this->fileName . 'code.txt', $this->crt->getEncryptionPass());
-
+        file_put_contents($this->fileName . 'req.pem', $this->crt->getCsr());
         openssl_x509_export_to_file($this->crt->getSignedCert(), $this->fileName . 'cert.crt');
         openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . 'key.pem', $this->crt->getEncryptionPass(), $this->certConfigure);
 
@@ -374,10 +426,10 @@ class CertificateFactory implements CertificateFactoryInterface
      * @param $caPassword
      * @return array
      */
-    public static function getPrivateKey($caName = null, $caPassword = null)
+    public function getPrivateKey($caName = null, $caPassword = null)
     {
         return [
-            file_get_contents(WWW_ROOT . $caName . DS .'key.pem'),
+            file_get_contents($this->caDataRoot . $caName . DS .'key.pem'),
             $caPassword
         ];
     }
@@ -388,8 +440,8 @@ class CertificateFactory implements CertificateFactoryInterface
      * @param null $caName
      * @return bool|string
      */
-    public static function getPublicKey($caName = null)
+    public function getPublicKey($caName = null)
     {
-        return file_get_contents(WWW_ROOT . $caName . DS . 'cert.crt');
+        return file_get_contents($this->caDataRoot . $caName . DS . 'cert.crt');
     }
 }
