@@ -165,9 +165,14 @@ var_dump($msg);*/
 
 /*$sf->setPrivateKey('Hogwarts/Students/hermione-granger', '102197');
 $sf->setPublicKey('Hogwarts/Students/hermione-granger');
-$signature = $sf->setString('Ahoj')->sign();
+$signature = $sf->setString('Ahoj');*/
 
-echo $sf->setString("Ahoj")->verify($signature);*/
+//echo $sf->setString("Ahoj")->verify($signature);
+
+/*file_put_contents('./cakeapp.license.txt', base64_encode($sf->encrypt()));
+
+$encr = base64_decode(file_get_contents('./cakeapp.license.txt'));
+echo $sf->setString($encr)->decrypt();*/
 
 /*$cf->domainName()
     ->setCommonName("webmail.zsokruzna.sk")
@@ -183,7 +188,7 @@ $cf->setType("server")
     ->setCa('Gnoma/intermediate', '10321033')
     ->sign()->toFile();*/
 
-$cf->domainName()
+/*$cf->domainName()
     ->setCommonName('webmail.gnoma.sk')
     ->setLocalityName('Michalovce')
     ->setCountryName('SK')
@@ -198,5 +203,5 @@ $cf->getAltNames()
 $cf->setType('server')
     ->setName('Gnoma/Webpages/gnoma-server')
     ->setCa('Gnoma/intermediate', '10321033')
-    ->sign()->toFile();
+    ->sign()->toFile();*/
 

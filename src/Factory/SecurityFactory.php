@@ -42,6 +42,14 @@ class SecurityFactory
     }
 
     /**
+     * @return CertificateFactory
+     */
+    public function getCertificateFactory()
+    {
+        return $this->certificateFactory;
+    }
+
+    /**
      * @param $path
      * @param $pass
      */
