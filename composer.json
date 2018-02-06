@@ -1,5 +1,5 @@
 {
-    "name": "maymeow/may-encrypt",
+    "name": "may/may-encrypt",
     "description": "Extendable Certificate Authority scirpt made with PHP",
     "type": "project",
     "license": "MIT",
