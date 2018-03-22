@@ -309,6 +309,12 @@ class CertificateFactory implements CertificateFactoryInterface
     {
         $this->fileName = $this->caDataRoot . $name . DS;
 
+        // Create folder for future certificate
+        if(!file_exists($this->fileName))
+        {
+            mkdir($this->fileName, 0777, true);
+        }
+
         return $this;
     }
 
@@ -384,10 +390,6 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     public function toFile($options = [])
     {
-        if(!file_exists($this->fileName))
-        {
-            mkdir($this->fileName, 0777, true);
-        }
         file_put_contents($this->fileName . 'code.txt', $this->crt->getEncryptionPass());
         file_put_contents($this->fileName . 'req.pem', $this->crt->getCsr());
         openssl_x509_export_to_file($this->crt->getSignedCert(), $this->fileName . 'cert.crt');

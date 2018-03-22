@@ -1,0 +1,19 @@
+image: registry.gitcity.eu/gitcity-sk/gitcity-build-images:php-7.1-fpm-redis-phpunit-6.5.6
+
+# Tags
+.run-on-do-docker: &run-on-do-docker
+    tags:
+        - digitalocean
+        - docker
+
+.before-script: &before-script
+  before_script:
+    - composer -V
+    - composer self-update
+    - composer install --no-ansi --no-interaction --no-progress --no-scripts
+
+phpunit test:
+  <<: *run-on-do-docker
+  stage: test
+  script:
+    - phpunit --coverage-text --colors=never
