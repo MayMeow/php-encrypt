@@ -14,6 +14,7 @@ image: registry.gitcity.eu/gitcity-sk/gitcity-build-images:php-7.1-fpm-redis-php
 
 phpunit test:
   <<: *run-on-do-docker
+  <<: *before-script
   stage: test
   script:
     - phpunit --coverage-text --colors=never
