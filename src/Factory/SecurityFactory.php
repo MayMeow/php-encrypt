@@ -170,4 +170,12 @@ class SecurityFactory
         return openssl_verify($this->string, $signature, $this->publicKey);
     }
 
+    /**
+     * @param $pass
+     */
+    public function decryptPrivateKey($pass)
+    {
+        // TODO
+    }
+
 }

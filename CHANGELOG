@@ -1,7 +1,11 @@
-v 1.1
+v 2017.11
+
+* ADD ability to export decrypted private key when certificate is signing
+
+v 2017.6.1
 
 * Add Security Factory
 
-v 1.0
+v 2017.6
 
 * Initial commit

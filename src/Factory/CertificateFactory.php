@@ -83,7 +83,7 @@ class CertificateFactory implements CertificateFactoryInterface
      * Certificate model
      * Here will be stored all required variables, keys, csr and certificate
      *
-     * @var
+     * @var SignedCertificate
      */
     protected $crt;
 
@@ -380,11 +380,9 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
-     * Export certificate to file
-     *
-     * @param null $pkcs12
+     * @param array $options
      */
-    public function toFile($pkcs12 = null)
+    public function toFile($options = [])
     {
         if(!file_exists($this->fileName))
         {
@@ -395,7 +393,11 @@ class CertificateFactory implements CertificateFactoryInterface
         openssl_x509_export_to_file($this->crt->getSignedCert(), $this->fileName . 'cert.crt');
         openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . 'key.pem', $this->crt->getEncryptionPass(), $this->certConfigure);
 
-        if ($pkcs12 !== null) {
+        if (isset($options['decryptedPk']) && $options['decryptedPk'] == true) {
+            openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . 'unenc.key.pem', null, $this->certConfigure);
+        }
+
+        if (isset($options['pcks12']) && $options['pcks12'] == true) {
             openssl_pkcs12_export_to_file($this->crt->getSignedCert(), $this->fileName . 'cert.pfx', $this->crt->getPrivateKey(), $this->crt->getEncryptionPass(), $this->certConfigure);
         }
     }
