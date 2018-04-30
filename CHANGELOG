@@ -1,3 +1,11 @@
+v 2018.4
+
+* ADD key pair generation
+* UPDATE CF to use keypar model
+* UPDATE CF can now load unencrypted private keys
+* UPDATE SF can now load keyPairs and Certificates
+* UPDATE SF can now load unencrypted keys
+
 v 2018.3
 
 * ADD Tests...
