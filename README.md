@@ -149,6 +149,12 @@ $sf->setPrivateKey('keys-2', null);
 $sf->setPublicKey('keys-2');
 ```
 
+or you can use loaders to set keypairs
+
+```php
+$sf->setKeyPair(new KeyPairFileLoader('keys-2'));
+```
+
 5. Encrypt text
 
 ```php

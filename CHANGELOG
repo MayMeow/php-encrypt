@@ -1,6 +1,7 @@
 v 2018.4
 
-* ADD key pair generation
+* NEW key pair generation
+* NEW key pair loader interfaces
 * UPDATE CF to use keypar model
 * UPDATE CF can now load unencrypted private keys
 * UPDATE SF can now load keyPairs and Certificates

@@ -1,4 +1,6 @@
 <?php
+
+use MayMeow\Loaders\KeyPairFileLoader;
 /**
  * This file is part of MayMeow/encrypt project
  * Copyright (c) 2017 Charlotta Jung
@@ -154,9 +156,7 @@ $string = json_encode([
 ]);
 
 $sf->setString($string);
-$sf->setPrivateKey('keys-2', null);
-$sf->setPublicKey('keys-2');
-
+$sf->setKeyPair(new KeyPairFileLoader('keys-2'));
 $enc = base64_encode($sf->encrypt());
 
 $sf->setString(base64_decode($enc));

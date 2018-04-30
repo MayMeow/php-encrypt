@@ -23,6 +23,8 @@
 
 namespace MayMeow\Factory;
 
+use MayMeow\Loaders\KeyPairLoaderInterface;
+
 class SecurityFactory
 {
 
@@ -78,6 +80,15 @@ class SecurityFactory
         $pubKey = $this->certificateFactory->getPublicKey($path);
 
         $this->publicKey = openssl_get_publickey($pubKey);
+    }
+
+    /**
+     * Set key pairs
+     */
+    public function setKeyPair(KeyPairLoaderInterface $keyPairLoader)
+    {
+        $this->privateKey = $keyPairLoader->getPrivateKey();
+        $this->publicKey = $keyPairLoader->getPublicKey();
     }
 
     public function setString($string)
