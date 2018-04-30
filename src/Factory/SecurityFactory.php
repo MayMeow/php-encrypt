@@ -50,14 +50,24 @@ class SecurityFactory
     }
 
     /**
+     * Returns private key from given key information
+     */
+    protected function _parsePrivateKeyFromInfo($privKeyInfo)
+    {
+        if (is_array($privKeyInfo)) return openssl_get_privatekey($privKeyInfo[0], $privKeyInfo[1]);
+
+        return openssl_get_privatekey($privKeyInfo);
+    }
+
+    /**
      * @param $path
      * @param $pass
      */
     public function setPrivateKey($path, $pass)
     {
-        $privKey = $this->certificateFactory->getPrivateKey($path,$pass);
+        $privKeyInfo = $this->certificateFactory->getPrivateKey($path,$pass);
 
-        $this->privateKey = openssl_get_privatekey($privKey[0], $privKey[1]);
+        $this->privateKey = $this->_parsePrivateKeyFromInfo($privKeyInfo);
     }
 
     /**

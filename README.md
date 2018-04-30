@@ -111,6 +111,59 @@ Windows users need certificate in PKCS12 format, `.pfx` file extension. To creat
 ...->toFile(true);
 ```
 
+### Creating key pairs
+
+If you dont need certificate you can create key pair `from v2018.4`
+
+```php
+$keys = $cf->setType('ca')->setName('keys-2')->getKeyPair(true); // true means keys will be stored into files
+
+$keys->getPrivateKey(); // returns private key
+$keys->getPublicKey(); // returns public key
+```
+
+## Security factory
+
+Security factory can be used for encryptig and decripting strings.
+
+1. Initialize security factory
+
+```php
+$sf = new \MayMeow\Factory\SecurityFactory(new \MayMeow\Factory\CertificateFactory());
+```
+
+2. Set string which you want to encrypt
+
+```php
+$string = json_encode([
+    "name" => 'Hello',
+    "surname" => 'world'
+]);
+$sf->setString($string);
+```
+
+3. load keys that will be used to encrypt / decrypt
+
+```php
+$sf->setPrivateKey('keys-2', null);
+$sf->setPublicKey('keys-2');
+```
+
+5. Encrypt text
+
+```php
+$enc = base64_encode($sf->publicEncrypt());
+```
+
+6. Decrypt
+
+```php
+$sf->setString(base64_decode($enc));
+$decrypted = base64_encode($sf->privateDecrypt());
+```
+
+Example above will encrypt text with public key and decrypt with private. If you want encrypt with private just use `$sf->encrypt()` and `$sf->decrypt` for decrypting.
+
 ## Contributing
 
 1. Fork it!

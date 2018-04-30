@@ -31,7 +31,9 @@ class SignedCertificate
      */
     public function getPrivateKey()
     {
-        return $this->privateKey;
+        if (null == $this->privateKey) return null;
+
+        return $this->privateKey->getPrivateKey();
     }
 
     /**
@@ -40,7 +42,12 @@ class SignedCertificate
      */
     public function setPrivateKey($privateKey)
     {
-        $this->privateKey = $privateKey;
+        if (null == $this->privateKey) {
+            $this->privateKey = new KeyPair();
+        }
+        
+        $this->privateKey->setPrivateKey($privateKey);
+
         return $this;
     }
 

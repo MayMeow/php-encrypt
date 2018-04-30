@@ -20,9 +20,20 @@ use MayMeow\Model\AltNames;
 use MayMeow\Model\DomainName;
 use MayMeow\Model\SignedCertificate;
 use Symfony\Component\Yaml\Yaml;
+use MayMeow\Model\KeyPair;
 
 class CertificateFactory implements CertificateFactoryInterface
 {
+    /**
+     * Private key file name
+     */
+    protected const PRIV_KEY_FILENAME = 'key.pem';
+
+    /**
+     * Public key file name
+     */
+    protected const PUB_KEY_FILENAME = 'cert.crt';
+
     /**
      * @var DomainName
      */
@@ -205,6 +216,35 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
+     * Generates a new private key
+     */
+    protected function _generatePK()
+    {
+        return openssl_pkey_new($this->certConfigure);
+    }
+
+    /**
+     * Returns key pair
+     */
+    public function getKeyPair($file = false)
+    {
+        $pk = $this->_generatePK();
+
+        openssl_pkey_export($pk, $privKey, null, $this->certConfigure);
+        $pubKey = openssl_pkey_get_details($pk);
+
+        $keys = new KeyPair();
+        $keys->setPrivateKey($privKey)->setPublicKey($pubKey['key']);
+
+        if ($file) {
+            file_put_contents($this->fileName . static::PRIV_KEY_FILENAME , $keys->getPrivateKey());
+            file_put_contents($this->fileName . static::PUB_KEY_FILENAME , $keys->getPublicKey());
+        }
+
+        return $keys;
+    }
+
+    /**
      * @param $path
      * @return $this
      */
@@ -335,7 +375,7 @@ class CertificateFactory implements CertificateFactoryInterface
         ]);
         */
 
-        $this->crt->setPrivateKey(openssl_pkey_new($this->certConfigure));
+        $this->crt->setPrivateKey($this->_generatePK());
 
 
         $privKey = $this->crt->getPrivateKey();
@@ -392,8 +432,8 @@ class CertificateFactory implements CertificateFactoryInterface
     {
         file_put_contents($this->fileName . 'code.txt', $this->crt->getEncryptionPass());
         file_put_contents($this->fileName . 'req.pem', $this->crt->getCsr());
-        openssl_x509_export_to_file($this->crt->getSignedCert(), $this->fileName . 'cert.crt');
-        openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . 'key.pem', $this->crt->getEncryptionPass(), $this->certConfigure);
+        openssl_x509_export_to_file($this->crt->getSignedCert(), $this->fileName . static::PUB_KEY_FILENAME);
+        openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . static::PRIV_KEY_FILENAME, $this->crt->getEncryptionPass(), $this->certConfigure);
 
         if (isset($options['decryptedPk']) && $options['decryptedPk'] == true) {
             openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . 'unenc.key.pem', null, $this->certConfigure);
@@ -425,17 +465,23 @@ class CertificateFactory implements CertificateFactoryInterface
 
     /**
      * Method getCaKey
+     * Returns array for encrypted keys and string othervise
      *
      * @param $caName
      * @param $caPassword
-     * @return array
+     * @return array|string
      */
     public function getPrivateKey($caName = null, $caPassword = null)
     {
-        return [
-            file_get_contents($this->caDataRoot . $caName . DS .'key.pem'),
-            $caPassword
-        ];
+        // if password is set
+        if ($caPassword !== null) {
+            return [
+                file_get_contents($this->caDataRoot . $caName . DS . static::PRIV_KEY_FILENAME),
+                $caPassword
+            ];
+        }
+
+        return file_get_contents($this->caDataRoot . $caName . DS . static::PRIV_KEY_FILENAME);
     }
 
     /**
@@ -446,6 +492,6 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     public function getPublicKey($caName = null)
     {
-        return file_get_contents($this->caDataRoot . $caName . DS . 'cert.crt');
+        return file_get_contents($this->caDataRoot . $caName . DS . static::PUB_KEY_FILENAME);
     }
 }

@@ -148,6 +148,21 @@ $server->setType('server', [
 
 $sf = new \MayMeow\Factory\SecurityFactory(new \MayMeow\Factory\CertificateFactory());
 
+$string = json_encode([
+    "name" => 'Hello',
+    "surname" => 'world'
+]);
+
+$sf->setString($string);
+$sf->setPrivateKey('keys-2', null);
+$sf->setPublicKey('keys-2');
+
+$enc = base64_encode($sf->encrypt());
+
+$sf->setString(base64_decode($enc));
+
+var_dump($sf->decrypt());
+
 /*$string = json_encode([
     "name" => 'Hello',
     "surname" => 'world'
@@ -167,7 +182,7 @@ var_dump($msg);*/
 $sf->setPublicKey('Hogwarts/Students/hermione-granger');
 $signature = $sf->setString('Ahoj');*/
 
-$sf->setPrivateKey('Hogwarts/Students/hermione-granger', '102197');
+//$sf->setPrivateKey('Hogwarts/Students/hermione-granger', '102197');
 //var_dump($sf->decryptPrivateKey('102197'));
 
 //echo $sf->setString("Ahoj")->verify($signature);
@@ -191,19 +206,5 @@ $cf->setType("server")
     ->setCa('Gnoma/intermediate', '10321033')
     ->sign()->toFile();*/
 
-$cf->domainName()
-    ->setCommonName('webmail.gnoma.sk')
-    ->setLocalityName('Michalovce')
-    ->setCountryName('SK')
-    ->setOrganizationName('GNOMA s.r.o.');
-
-$cf->getAltNames()
-    ->setDns('webmail.gnoma.sk')
-    ->setDns('mail.gnoma.sk')
-    ->setDns('gnoma.sk')
-    ;
-
-$cf->setType('server')
-    ->setName('Gnoma/Webpages/gnoma-server')
-    ->setCa('Gnoma/intermediate', '10321033')
-    ->sign()->toFile(['pcks12' => true, 'decryptedPk' => true]);
+/*var_dump($cf->setType('ca')->setName('keys-2')
+    ->getKeyPair(true));*/
