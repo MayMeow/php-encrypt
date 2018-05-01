@@ -24,6 +24,7 @@ class KeyPair implements KeyPairInterface
 
     /**
      * Returns private key
+     * @return mixed
      */
     public function getPrivateKey()
     {
@@ -32,6 +33,8 @@ class KeyPair implements KeyPairInterface
 
     /**
      * Set private key
+     * @param $privKey
+     * @return $this
      */
     public function setPrivateKey($privKey)
     {
@@ -42,6 +45,7 @@ class KeyPair implements KeyPairInterface
 
     /**
      * Returns public key
+     * @return mixed
      */
     public function getPublicKey()
     {
@@ -50,6 +54,8 @@ class KeyPair implements KeyPairInterface
 
     /**
      * Set public key
+     * @param $pubKey
+     * @return $this
      */
     public function setPublicKey($pubKey)
     {

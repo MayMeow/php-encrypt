@@ -20,21 +20,27 @@ interface KeyPairInterface
 {
     /**
      * Returns private key
+     * @return mixed
      */
     public function getPrivateKey();
 
     /**
      * Set private key
+     * @param $privKey
+     * @return mixed
      */
     public function setPrivateKey($privKey);
 
     /**
      * Returns public key
+     * @return mixed
      */
     public function getPublicKey();
 
     /**
      * Set public key
+     * @param $privKey
+     * @return mixed
      */
     public function setPublicKey($pubKey);
 }

@@ -28,16 +28,35 @@ use MayMeow\Loaders\KeyPairLoaderInterface;
 class SecurityFactory
 {
 
+    /**
+     * @var $privateKey
+     */
     protected $privateKey;
 
+    /**
+     * @var $publicKey
+     */
     protected $publicKey;
 
+    /**
+     * @var array $recipientKeys
+     */
     protected $recipientKeys = [];
 
+    /**
+     * @var $string
+     */
     protected $string;
 
+    /**
+     * @var CertificateFactory $certificateFactory
+     */
     protected $certificateFactory;
 
+    /**
+     * SecurityFactory constructor.
+     * @param CertificateFactory $certificateFactory
+     */
     public function __construct(CertificateFactory $certificateFactory)
     {
         $this->certificateFactory = $certificateFactory;
@@ -83,7 +102,8 @@ class SecurityFactory
     }
 
     /**
-     * Set key pairs
+     * Set key pair
+     * @param KeyPairLoaderInterface $keyPairLoader
      */
     public function setKeyPair(KeyPairLoaderInterface $keyPairLoader)
     {
@@ -91,6 +111,10 @@ class SecurityFactory
         $this->publicKey = $keyPairLoader->getPublicKey();
     }
 
+    /**
+     * @param $string
+     * @return $this
+     */
     public function setString($string)
     {
         $this->string = $string;
@@ -98,6 +122,10 @@ class SecurityFactory
         return $this;
     }
 
+    /**
+     * @param null $path
+     * @return $this
+     */
     public function addRecipientKey($path = null)
     {
         $this->recipientKeys[] = $this->certificateFactory->getPublicKey($path);

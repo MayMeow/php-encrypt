@@ -21,14 +21,31 @@ use MayMeow\Factory\CertificateFactory;
 
 class KeyPairFileLoader implements KeyPairLoaderInterface
 {
+    /**
+     * @var $keyPair
+     */
     protected $keyPair;
 
+    /**
+     * @var CertificateFactory $certificateFactory
+     */
     protected $certificateFactory;
 
+    /**
+     * @var bool|string $publicKey
+     */
     protected $publicKey;
 
+    /**
+     * @var bool|resource $privateKey
+     */
     protected $privateKey;
 
+    /**
+     * KeyPairFileLoader constructor.
+     * @param $path
+     * @param null $pass
+     */
     public function __construct($path, $pass = null)
     {
         $this->certificateFactory = new CertificateFactory();
@@ -40,6 +57,8 @@ class KeyPairFileLoader implements KeyPairLoaderInterface
 
     /**
      * Returns private key from given key information
+     * @param $privKeyInfo
+     * @return bool|resource
      */
     protected function _parsePrivateKeyFromInfo($privKeyInfo)
     {
@@ -50,6 +69,7 @@ class KeyPairFileLoader implements KeyPairLoaderInterface
 
     /**
      * Returns private key
+     * @return bool|resource
      */
     public function getPrivateKey()
     {
@@ -58,6 +78,7 @@ class KeyPairFileLoader implements KeyPairLoaderInterface
 
     /**
      * Returns public key
+     * @return bool|string
      */
     public function getPublicKey()
     {
