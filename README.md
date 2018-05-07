@@ -1,5 +1,8 @@
 # PHP Encrypt
 
+[![Beerpay](https://beerpay.io/MayMeow/php-encrypt/badge.svg)](https://beerpay.io/MayMeow/php-encrypt)
+[![Build Status](https://travis-ci.org/MayMeow/php-encrypt.svg?branch=master)](https://travis-ci.org/MayMeow/php-encrypt)
+
 Library for signing certificates with selfsigned CA known as May-Encrypt
 
 ## Installation
