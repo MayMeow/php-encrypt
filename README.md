@@ -1,12 +1,12 @@
-# May Encrypt
+# PHP Encrypt
 
-Library for signing certificates with selfsigned CA
+Library for signing certificates with selfsigned CA known as May-Encrypt
 
 ## Installation
 
 Install with docker:
 ```bash
-composer require maymeow/may-encrypt
+composer require maymeow/php-encrypt
 ```
 
 And intialize it withhin your script

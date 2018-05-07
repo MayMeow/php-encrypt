@@ -1,12 +1,12 @@
 {
-    "name": "maymeow/may-encrypt",
+    "name": "maymeow/php-encrypt",
     "description": "Extendable Certificate Authority scirpt made with PHP",
     "type": "project",
     "license": "MIT",
     "authors": [
         {
-            "name": "Charlotta Jung",
-            "email": "jungcharlotta@gmail.com"
+            "name": "May Meow",
+            "email": "themaymeow@gmail.com"
         }
     ],
     "autoload": {
