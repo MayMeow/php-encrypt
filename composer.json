@@ -1,12 +1,12 @@
 {
-    "name": "maymeow/may-encrypt",
+    "name": "maymeow/php-encrypt",
     "description": "Extendable Certificate Authority scirpt made with PHP",
     "type": "project",
     "license": "MIT",
     "authors": [
         {
-            "name": "Charlotta Jung",
-            "email": "jungcharlotta@gmail.com"
+            "name": "May Meow",
+            "email": "themaymeow@gmail.com"
         }
     ],
     "autoload": {
@@ -16,7 +16,7 @@
         }
     },
     "require": {
-        "symfony/yaml": "^4.0"
+        "symfony/yaml": "^4.0|~3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0"
