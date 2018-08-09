@@ -33,6 +33,12 @@ If you want to save templates for generating certificates on different folder yo
 $cf->setTemplatesPath('/path/to/templates/folder');
 ```
 
+To chanage folder to change path to your configuration file
+
+```php
+$cf->setConfigPath('/path/to/templates/folder/my_config_file.yml');
+```
+
 If you don use any of this commands default values will be used.
 
 ### Certificate Signing

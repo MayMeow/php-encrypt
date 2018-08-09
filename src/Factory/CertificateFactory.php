@@ -160,10 +160,10 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Load Default configuration
      */
-    protected function _setConfig()
+    protected function _setConfig($path)
     {
-        $cnf = file_get_contents(CONFIG . 'encrypt.yml');
-        $this->config = Yaml::parse($cnf);
+        if (null == $path) $path = file_get_contents(CONFIG . 'encrypt.yml');
+        $this->config = Yaml::parse($path);
     }
 
     /**
@@ -251,6 +251,17 @@ class CertificateFactory implements CertificateFactoryInterface
     public function setDataPath($path)
     {
         $this->_setDataPath($path);
+
+        return $this;
+    }
+
+    /**
+     * @param $path
+     * @return $this
+     */
+    public function setConfigPath($path)
+    {
+        $this->_setConfig($path);
 
         return $this;
     }
