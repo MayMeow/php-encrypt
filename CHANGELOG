@@ -1,3 +1,8 @@
+v 2018.8.1
+
+* Pass configuration file to Certificate Factory via constructor
+* KeFileLoaders now requre pass CertificateFactory via constructor
+
 v 2018.8
 
 * Add ability to change path to configuration file
