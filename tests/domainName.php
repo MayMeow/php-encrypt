@@ -57,7 +57,7 @@ $intermediate->setType('intermediate')
 
 // user
 
-$cf = new \MayMeow\Factory\CertificateFactory();
+//$cf = new \MayMeow\Factory\CertificateFactory();
 
 /*$cf->domainName()
     ->setOrganizationName('Hogwarts School of Witchcraft and Wizardry')
@@ -148,7 +148,15 @@ $server->setType('server', [
     ->setCa('may-intermediate-ca')
     ->sign();*/
 
-$sf = new \MayMeow\Factory\SecurityFactory(new \MayMeow\Factory\CertificateFactory());
+$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
+
+$keys = $cf->setType('ca')->setName('keys-2')->getKeyPair(false);
+
+$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys);
+
+var_dump($kl->getPublicKey());
+
+/*$sf = new \MayMeow\Factory\SecurityFactory($cf);
 
 $string = json_encode([
     "name" => 'Hello',
@@ -156,12 +164,12 @@ $string = json_encode([
 ]);
 
 $sf->setString($string);
-$sf->setKeyPair(new KeyPairFileLoader('keys-2'));
+$sf->setKeyPair(new KeyPairFileLoader($cf, 'keys-2'));
 $enc = base64_encode($sf->encrypt());
 
 $sf->setString(base64_decode($enc));
 
-var_dump($sf->decrypt());
+var_dump($sf->decrypt());*/
 
 /*$string = json_encode([
     "name" => 'Hello',

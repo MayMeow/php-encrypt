@@ -14,7 +14,7 @@ composer require maymeow/php-encrypt
 
 And intialize it withhin your script
 ```php
-$cf = new \MayMeow\Factory\CertificateFactory();
+$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 ```
 
 ## Usage
@@ -131,6 +131,27 @@ $keys->getPrivateKey(); // returns private key
 $keys->getPublicKey(); // returns public key
 ```
 
+### Loaders 
+
+Loaders are new feature that can be used to load Key pair `from v2018.5`. Each loader implements LoaderInterfaace. To use them follow example below.
+
+```php
+// use CertificateFactory and generated keys
+$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys);
+
+$kl->getPublicKey() // return string with public key
+$kl->getPrivateKey() // return string with private key
+```
+
+When you have certificate or keypair generated to file you can use File loader
+
+```php
+$kl = new \MayMeow\Loaders\KeyPairFileLoader($cf, 'keys-2');
+
+$kl->getPublicKey() // return string with public key
+$kl->getPrivateKey() // return string with private key
+```
+
 ## Security factory
 
 Security factory can be used for encryptig and decripting strings.
@@ -138,7 +159,7 @@ Security factory can be used for encryptig and decripting strings.
 1. Initialize security factory
 
 ```php
-$sf = new \MayMeow\Factory\SecurityFactory(new \MayMeow\Factory\CertificateFactory());
+$sf = new \MayMeow\Factory\SecurityFactory($cf);
 ```
 
 2. Set string which you want to encrypt

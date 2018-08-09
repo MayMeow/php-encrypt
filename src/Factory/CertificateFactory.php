@@ -21,6 +21,7 @@ use MayMeow\Model\DomainName;
 use MayMeow\Model\SignedCertificate;
 use Symfony\Component\Yaml\Yaml;
 use MayMeow\Model\KeyPair;
+use MayMeow\Model\EncryptConfiguration;
 
 class CertificateFactory implements CertificateFactoryInterface
 {
@@ -111,9 +112,9 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     protected $caDataRoot;
 
-    public function __construct()
+    public function __construct(EncryptConfiguration $encryptConfiguration)
     {
-        $this->_setConfig();
+        $this->_setConfig($encryptConfiguration->get());
 
         $this->_setDataPath(WWW_ROOT);
 
@@ -160,9 +161,8 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Load Default configuration
      */
-    protected function _setConfig($path)
+    protected function _setConfig($path = null)
     {
-        if (null == $path) $path = file_get_contents(CONFIG . 'encrypt.yml');
         $this->config = Yaml::parse($path);
     }
 
