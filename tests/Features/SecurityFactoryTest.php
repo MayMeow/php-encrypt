@@ -6,11 +6,16 @@ use MayMeow\Tests\TestCase;
 use MayMeow\Factory\CertificateFactory;
 use MayMeow\Factory\SecurityFactory;
 use MayMeow\Loaders\KeyPairFileLoader;
+use MayMeow\Loaders\KeyPairLoader;
 use MayMeow\Model\EncryptConfiguration;
 
 class SecurityFactoryTest extends TestCase 
 {
     protected const KEY_PAIR_NAME = 'keys-2';
+
+    protected const PROTECTED_KEY_PAIR_NAME = 'protected-keys-2';
+
+    protected const PKEY_PASSPHRASE = 'pa$$w0rd';
 
     /**
      * @var SecurityFactory $sf;
@@ -35,6 +40,16 @@ class SecurityFactoryTest extends TestCase
     }
 
     /** @test */
+    function users_can_create_new_protected_key_pair()
+    {
+        $cf = new CertificateFactory(new EncryptConfiguration());
+        $cf->setType('ca')->setName(static::PROTECTED_KEY_PAIR_NAME)->getKeyPair(true, static::PKEY_PASSPHRASE);
+
+        $this->assertTrue(file_exists(WWW_ROOT . static::PROTECTED_KEY_PAIR_NAME . DS . 'cert.crt'));
+        $this->assertTrue(file_exists(WWW_ROOT . static::PROTECTED_KEY_PAIR_NAME . DS . 'key.pem'));
+    }
+
+    /** @test */
     function users_can_encrypt_and_decrypt()
     {
         $string = json_encode([
@@ -53,6 +68,24 @@ class SecurityFactoryTest extends TestCase
     }
 
     /** @test */
+    function users_can_encrypt_and_decrypt_with_protected_pk()
+    {
+        $string = json_encode([
+            "name" => 'Hello',
+            "surname" => 'world'
+        ]);
+
+        $this->sf->setString($string);
+        $this->sf->setKeyPair(new KeyPairFileLoader(new CertificateFactory(new EncryptConfiguration()), static::PROTECTED_KEY_PAIR_NAME, static::PKEY_PASSPHRASE));
+        $encrypted = base64_encode($this->sf->encrypt());
+
+        $this->sf->setString(base64_decode($encrypted));
+        $decrypted = $this->sf->decrypt();
+
+        $this->assertEquals($string, $decrypted);
+    }
+
+    /** @test */
     function users_can_encrypt_and_decrypt_inverse()
     {
         $string = json_encode([
@@ -62,6 +95,45 @@ class SecurityFactoryTest extends TestCase
 
         $this->sf->setString($string);
         $this->sf->setKeyPair(new KeyPairFileLoader(new CertificateFactory(new EncryptConfiguration(CONFIG . 'encrypt.yml')), static::KEY_PAIR_NAME));
+        $encrypted = base64_encode($this->sf->publicEncrypt());
+
+        $this->sf->setString(base64_decode($encrypted));
+        $decrypted = $this->sf->privateDecrypt();
+
+        $this->assertEquals($string, $decrypted);
+    }
+
+    /** @test */
+    function users_can_encrypt_and_decrypt_inverse_with_protected_pk()
+    {
+        $string = json_encode([
+            "name" => 'Hello',
+            "surname" => 'world'
+        ]);
+
+        $this->sf->setString($string);
+        $this->sf->setKeyPair(new KeyPairFileLoader(new CertificateFactory(new EncryptConfiguration(CONFIG . 'encrypt.yml')), static::PROTECTED_KEY_PAIR_NAME, static::PKEY_PASSPHRASE));
+        $encrypted = base64_encode($this->sf->publicEncrypt());
+
+        $this->sf->setString(base64_decode($encrypted));
+        $decrypted = $this->sf->privateDecrypt();
+
+        $this->assertEquals($string, $decrypted);
+    }
+
+    /** @test */
+    function users_can_encrypt_and_decrypt_pk_in_memory()
+    {
+        $string = json_encode([
+            "name" => 'Hello',
+            "surname" => 'world'
+        ]);
+
+        $cf = new CertificateFactory(new EncryptConfiguration(CONFIG . 'encrypt.yml'));
+        $keys = $cf->setType('ca')->setName('keys-in-memory')->getKeyPair(false, static::PKEY_PASSPHRASE);
+
+        $this->sf->setString($string);
+        $this->sf->setKeyPair(new KeyPairLoader($cf, $keys, static::PKEY_PASSPHRASE));
         $encrypted = base64_encode($this->sf->publicEncrypt());
 
         $this->sf->setString(base64_decode($encrypted));

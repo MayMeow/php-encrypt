@@ -41,18 +41,34 @@ class KeyPairLoader implements KeyPairLoaderInterface
      */
     protected $privateKey;
 
+    protected $passphrase;
+
     /**
      * KeyPairFileLoader constructor.
      * @param $path
-     * @param null $pass
+     * @param null $passphrase
      */
-    public function __construct(CertificateFactory $certificateFactory, KeyPairInterface $keys)
+    public function __construct(CertificateFactory $certificateFactory, KeyPairInterface $keys, $passphrase = null)
     {
         $this->certificateFactory = $certificateFactory;
 
-        $this->publicKey = $keys->getPublicKey();
-        $this->privateKey = $keys->getPrivateKey();
+        $this->passphrase = $passphrase;
 
+        $this->publicKey = $keys->getPublicKey();
+        $this->privateKey = $this->_parsePrivateKeyFromInfo($keys->getPrivateKey());
+
+    }
+
+    /**
+     * Parse information about private key from given string
+     */
+    protected function _parsePrivateKeyFromInfo($privKeyInfo)
+    {
+        if (null != $this->passphrase) {
+            return openssl_pkey_get_private($privKeyInfo, $this->passphrase);
+        }
+
+        return $privKeyInfo;
     }
 
     /**

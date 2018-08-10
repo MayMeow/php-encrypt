@@ -126,6 +126,7 @@ If you dont need certificate you can create key pair `from v2018.4`
 
 ```php
 $keys = $cf->setType('ca')->setName('keys-2')->getKeyPair(true); // true means keys will be stored into files
+$protected_keys = $cf->setType('ca')->setName('keys-2')->getKeyPair(true, 'pa$$phras3'); // will generate keypair with encrypted private key
 
 $keys->getPrivateKey(); // returns private key
 $keys->getPublicKey(); // returns public key
@@ -133,11 +134,13 @@ $keys->getPublicKey(); // returns public key
 
 ### Loaders 
 
-Loaders are new feature that can be used to load Key pair `from v2018.5`. Each loader implements LoaderInterfaace. To use them follow example below.
+Loaders are new feature that can be used to load Key pair `from v2018.5`. Each loader implements LoaderInterfaace. To use them follow example below. If you have protected (encrypted) private key **loaders are place where is decrypting based on passphrase**. **SecurityFactory using only decrpted private_keys**.
 
 ```php
 // use CertificateFactory and generated keys
 $kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys);
+
+$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys, 'pa$$phras3'); // when you have encrypted priv_key
 
 $kl->getPublicKey() // return string with public key
 $kl->getPrivateKey() // return string with private key
@@ -147,6 +150,8 @@ When you have certificate or keypair generated to file you can use File loader
 
 ```php
 $kl = new \MayMeow\Loaders\KeyPairFileLoader($cf, 'keys-2');
+
+$kl = new \MayMeow\Loaders\KeyPairFileLoader($cf, 'pa$$phras3'); // when you have encrypted priv_key
 
 $kl->getPublicKey() // return string with public key
 $kl->getPrivateKey() // return string with private key

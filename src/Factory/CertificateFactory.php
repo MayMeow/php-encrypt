@@ -226,11 +226,11 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Returns key pair
      */
-    public function getKeyPair($file = false)
+    public function getKeyPair($file = false, $passphrase = null)
     {
         $pk = $this->_generatePK();
 
-        openssl_pkey_export($pk, $privKey, null, $this->certConfigure);
+        openssl_pkey_export($pk, $privKey, $passphrase, $this->certConfigure);
         $pubKey = openssl_pkey_get_details($pk);
 
         $keys = new KeyPair();

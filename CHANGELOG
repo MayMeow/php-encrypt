@@ -1,3 +1,10 @@
+v 2018.8.2
+
+Added abilit with that can you protect your private keys when you not generating certiicates but only key pairs.
+
+* Ability to generate keypairs with encrypted private key
+* Loaders can now use encrypted private keys
+
 v 2018.8.1
 
 * Pass configuration file to Certificate Factory via constructor

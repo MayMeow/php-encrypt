@@ -150,13 +150,13 @@ $server->setType('server', [
 
 $cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 
-$keys = $cf->setType('ca')->setName('keys-2')->getKeyPair(false);
+$keys = $cf->setType('ca')->setName('keys-23')->getKeyPair(true);
 
-$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys);
+//$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys);
 
-var_dump($kl->getPublicKey());
+//var_dump($kl->getPrivateKey());
 
-/*$sf = new \MayMeow\Factory\SecurityFactory($cf);
+$sf = new \MayMeow\Factory\SecurityFactory($cf);
 
 $string = json_encode([
     "name" => 'Hello',
@@ -164,12 +164,12 @@ $string = json_encode([
 ]);
 
 $sf->setString($string);
-$sf->setKeyPair(new KeyPairFileLoader($cf, 'keys-2'));
-$enc = base64_encode($sf->encrypt());
+$sf->setKeyPair(new \MayMeow\Loaders\KeyPairLoader($cf, $keys));
+$enc = base64_encode($sf->publicEncrypt());
 
 $sf->setString(base64_decode($enc));
 
-var_dump($sf->decrypt());*/
+var_dump($sf->privateDecrypt('password'));
 
 /*$string = json_encode([
     "name" => 'Hello',
