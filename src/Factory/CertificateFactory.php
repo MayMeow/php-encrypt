@@ -142,6 +142,7 @@ class CertificateFactory implements CertificateFactoryInterface
             'ca' => $templateRootPath . 'ca_certificate.cnf',
             'user' => $templateRootPath . 'intermediate_certificate.cnf',
             'server' => $templateRootPath . 'intermediate_certificate.cnf',
+            'code_sign' => $templateRootPath . 'intermediate_certificate.cnf',
             'intermediate' => $templateRootPath . 'intermediate_certificate.cnf'
         ];
     }

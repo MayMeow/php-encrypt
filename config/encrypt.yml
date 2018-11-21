@@ -11,6 +11,9 @@ certificates:
   server:
     daysvalid: 1825
     x509_extensions: server_cert
+  code_sign:
+    daysvalid: 365
+    x509_extensions: code_sign
 
 default:
   private_key_bits: 4096
