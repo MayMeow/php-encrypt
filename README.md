@@ -1,9 +1,6 @@
 # PHP Encrypt
 
-[![Beerpay](https://beerpay.io/MayMeow/php-encrypt/badge.svg)](https://beerpay.io/MayMeow/php-encrypt)
-[![Build Status](https://travis-ci.org/MayMeow/php-encrypt.svg?branch=master)](https://travis-ci.org/MayMeow/php-encrypt)
-
-Library for signing certificates with selfsigned CA known as May-Encrypt
+Library for signing certificates with selfsigned CA
 
 ## Installation
 
@@ -230,7 +227,3 @@ MIT
 Hey dude! Help me out for a couple of :beers:!
 
 [![Beerpay](https://beerpay.io/MayMeow/may-encrypt/badge.svg?style=beer-square)](https://beerpay.io/MayMeow/may-encrypt)  [![Beerpay](https://beerpay.io/MayMeow/may-encrypt/make-wish.svg?style=flat-square)](https://beerpay.io/MayMeow/may-encrypt?focus=wish)
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/MayMeow/php-encrypt/badge.svg?style=beer-square)](https://beerpay.io/MayMeow/php-encrypt)  [![Beerpay](https://beerpay.io/MayMeow/php-encrypt/make-wish.svg?style=flat-square)](https://beerpay.io/MayMeow/php-encrypt?focus=wish)
