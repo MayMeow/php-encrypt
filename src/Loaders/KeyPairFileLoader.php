@@ -43,6 +43,7 @@ class KeyPairFileLoader implements KeyPairLoaderInterface
 
     /**
      * KeyPairFileLoader constructor.
+     * @param CertificateFactory $certificateFactory
      * @param $path
      * @param null $pass
      */
