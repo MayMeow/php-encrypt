@@ -1,0 +1,16 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: php
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run a one-line script
+      run: composer install
+    - name: Run a multi-line script
+      run: |
+        phpunit --coverage-text
