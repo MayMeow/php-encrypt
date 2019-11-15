@@ -24,6 +24,6 @@
         "phpunit/phpunit": "^7.0"
     },
     "scripts": {
-        "test": "phpunit --colors=always",
+        "test": "phpunit --colors=always"
     }
 }
