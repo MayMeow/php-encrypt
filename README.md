@@ -2,6 +2,8 @@
 
 Library for signing certificates with selfsigned CA
 
+![](https://github.com/maymeow/php-encrypt/workflows/PHP%20Composer/badge.svg)
+
 ## Installation
 
 Install with docker:
