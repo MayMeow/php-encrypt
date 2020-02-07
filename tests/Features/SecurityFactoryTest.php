@@ -33,7 +33,7 @@ class SecurityFactoryTest extends TestCase
     function users_can_create_new_key_pair()
     {
         $cf = new CertificateFactory(new EncryptConfiguration());
-        $cf->setType('ca')->setName(static::KEY_PAIR_NAME)->getKeyPair(true);
+        $cf->setType(CertificateFactory::TYPE_CERTIFICATION_AUTHORITY)->setName(static::KEY_PAIR_NAME)->getKeyPair(true);
 
         $this->assertTrue(file_exists(WWW_ROOT . static::KEY_PAIR_NAME . DS . 'cert.crt'));
         $this->assertTrue(file_exists(WWW_ROOT . static::KEY_PAIR_NAME . DS . 'key.pem'));
@@ -43,7 +43,7 @@ class SecurityFactoryTest extends TestCase
     function users_can_create_new_protected_key_pair()
     {
         $cf = new CertificateFactory(new EncryptConfiguration());
-        $cf->setType('ca')->setName(static::PROTECTED_KEY_PAIR_NAME)->getKeyPair(true, static::PKEY_PASSPHRASE);
+        $cf->setType(CertificateFactory::TYPE_CERTIFICATION_AUTHORITY)->setName(static::PROTECTED_KEY_PAIR_NAME)->getKeyPair(true, static::PKEY_PASSPHRASE);
 
         $this->assertTrue(file_exists(WWW_ROOT . static::PROTECTED_KEY_PAIR_NAME . DS . 'cert.crt'));
         $this->assertTrue(file_exists(WWW_ROOT . static::PROTECTED_KEY_PAIR_NAME . DS . 'key.pem'));

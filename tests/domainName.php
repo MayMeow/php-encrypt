@@ -148,15 +148,15 @@ $server->setType('server', [
     ->setCa('may-intermediate-ca')
     ->sign();*/
 
-$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
+/*$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 
-$keys = $cf->setType('ca')->setName('keys-23')->getKeyPair(true);
+$keys = $cf->setType('ca')->setName('keys-23')->getKeyPair(true);*/
 
 //$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys);
 
 //var_dump($kl->getPrivateKey());
 
-$sf = new \MayMeow\Factory\SecurityFactory($cf);
+/*$sf = new \MayMeow\Factory\SecurityFactory($cf);
 
 $string = json_encode([
     "name" => 'Hello',
@@ -169,7 +169,7 @@ $enc = base64_encode($sf->publicEncrypt());
 
 $sf->setString(base64_decode($enc));
 
-var_dump($sf->privateDecrypt('password'));
+var_dump($sf->privateDecrypt('password'));*/
 
 /*$string = json_encode([
     "name" => 'Hello',
@@ -216,3 +216,38 @@ $cf->setType("server")
 
 /*var_dump($cf->setType('ca')->setName('keys-2')
     ->getKeyPair(true));*/
+
+
+$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
+
+/*$cf->domainName()
+    ->setCommonName('EncryptKitties CA')
+    ->setCountryName('SK')
+    ->setOrganizationName('EncryptKitties');
+
+$cf->setType('ca')->setName('EncryptKitties')->sign()->toFile();*/
+
+/*$cf->domainName()
+    ->setCommonName('EncryptKitties Intermediate CA')
+    ->setCountryName('SK')
+    ->setOrganizationName('EncryptKitties');
+
+$cf->setType(\MayMeow\Factory\CertificateFactory::TYPE_INTERMEDIATE)
+    ->setName('EncryptKitties/intermediate')
+    ->setCa('EncryptKitties', 274682)
+    ->sign()->toFile();*/
+
+$cf->domainName()
+    ->setCommonName("server")
+    ->setOrganizationalUnitName("Mays Servers")
+    ->setOrganizationName("May Meow");
+
+$cf->getAltNames()
+    ->setIp("127.0.0.1");
+
+$cf->setType(\MayMeow\Factory\CertificateFactory::TYPE_SERVER)
+    ->setName("EncryptKitties/servers/all")
+    ->setCa('EncryptKitties/intermediate', 535635)
+    ->sign()->toFile([
+        'decryptedPk' => true
+    ]);

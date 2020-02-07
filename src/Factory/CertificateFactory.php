@@ -25,6 +25,12 @@ use MayMeow\Model\EncryptConfiguration;
 
 class CertificateFactory implements CertificateFactoryInterface
 {
+    const TYPE_INTERMEDIATE = "intermediate";
+    const TYPE_CODE_SIGN = "code_sign";
+    const TYPE_CERTIFICATION_AUTHORITY = "ca";
+    const TYPE_SERVER = "server";
+    const TYPE_USER = "user";
+
     /**
      * Private key file name
      */
@@ -373,11 +379,15 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Sign certificate file and export tem to disk
      */
-    public function sign()
+    public function sign($digest_alg = null)
     {
         $this->crt = new SignedCertificate();
 
         $this->_altConfiguration();
+
+        if (null !== $digest_alg) {
+            $this->certConfigure['digest_alg'] = $digest_alg;
+        }
 
         //print_r($this->altNames);
 
