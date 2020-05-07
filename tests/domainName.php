@@ -220,12 +220,12 @@ $cf->setType("server")
 
 $cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 
-/*$cf->domainName()
-    ->setCommonName('EncryptKitties CA')
+$cf->domainName()
+    ->setCommonName('EncryptKitties CA252')
     ->setCountryName('SK')
     ->setOrganizationName('EncryptKitties');
 
-$cf->setType('ca')->setName('EncryptKitties')->sign()->toFile();*/
+$cf->setType('ca')->setName('EncryptKitties')->sign()->toFile();
 
 /*$cf->domainName()
     ->setCommonName('EncryptKitties Intermediate CA')
@@ -237,7 +237,7 @@ $cf->setType(\MayMeow\Factory\CertificateFactory::TYPE_INTERMEDIATE)
     ->setCa('EncryptKitties', 274682)
     ->sign()->toFile();*/
 
-$cf->domainName()
+/**$cf->domainName()
     ->setCommonName("server")
     ->setOrganizationalUnitName("Mays Servers")
     ->setOrganizationName("May Meow");
@@ -250,4 +250,4 @@ $cf->setType(\MayMeow\Factory\CertificateFactory::TYPE_SERVER)
     ->setCa('EncryptKitties/intermediate', 535635)
     ->sign()->toFile([
         'decryptedPk' => true
-    ]);
+    ]);**/

@@ -23,6 +23,18 @@ class KeyPair implements KeyPairInterface
     protected $publicKey;
 
     /**
+     * @return KeyPair
+     */
+    public static function initialize()
+    {
+        return new self();
+    }
+
+    private function __construct()
+    {
+    }
+
+    /**
      * Returns private key
      * @return mixed
      */

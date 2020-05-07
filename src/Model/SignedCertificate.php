@@ -16,92 +16,9 @@
 
 namespace MayMeow\Model;
 
-class SignedCertificate
+use MayMeow\Cert\X509Certificate2;
+
+/** @deprecated  */
+class SignedCertificate extends X509Certificate2
 {
-    protected $csr;
-
-    protected $privateKey;
-
-    protected $signedCert;
-
-    protected $encryptionPass;
-
-    /**
-     * @return mixed
-     */
-    public function getPrivateKey()
-    {
-        if (null == $this->privateKey) return null;
-
-        return $this->privateKey->getPrivateKey();
-    }
-
-    /**
-     * @param mixed $privateKey
-     * @return SignedCertificate
-     */
-    public function setPrivateKey($privateKey)
-    {
-        if (null == $this->privateKey) {
-            $this->privateKey = new KeyPair();
-        }
-        
-        $this->privateKey->setPrivateKey($privateKey);
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSignedCert()
-    {
-        return $this->signedCert;
-    }
-
-    /**
-     * @param mixed $signedCert
-     * @return SignedCertificate
-     */
-    public function setSignedCert($signedCert)
-    {
-        $this->signedCert = $signedCert;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getEncryptionPass()
-    {
-        return $this->encryptionPass;
-    }
-
-    /**
-     * @param int $encryptionPass
-     * @return SignedCertificate
-     */
-    public function setEncryptionPass($encryptionPass)
-    {
-        $this->encryptionPass = $encryptionPass;
-        return $this;
-    }
-
-    public function __construct()
-    {
-        $this->encryptionPass = rand(100000, 999999);
-    }
-
-    public function getCsr()
-    {
-        openssl_csr_export($this->csr, $response);
-
-        return $response;
-    }
-
-    public function setCsr($csr)
-    {
-        $this->csr = $csr;
-        return $this;
-    }
 }

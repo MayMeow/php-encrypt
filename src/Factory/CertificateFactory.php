@@ -16,9 +16,11 @@
 
 namespace MayMeow\Factory;
 
+use MayMeow\Cert\X509Certificate2;
 use MayMeow\Model\AltNames;
 use MayMeow\Model\DomainName;
 use MayMeow\Model\SignedCertificate;
+use MayMeow\RSA\RSACryptoServiceProvider;
 use Symfony\Component\Yaml\Yaml;
 use MayMeow\Model\KeyPair;
 use MayMeow\Model\EncryptConfiguration;
@@ -50,7 +52,7 @@ class CertificateFactory implements CertificateFactoryInterface
      * Alternative names for certificate
      * DNS, IP, URL
      *
-     * @var
+     * @var AltNames $altNames
      */
     protected $altNames;
 
@@ -154,98 +156,19 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
-     * Load Default Configuration
-     */
-    protected function _setCertConfigure()
-    {
-        $this->certConfigure = [
-            'config' => $this->typeConfigurations[$this->type],
-            'x509_extensions' => $this->_getConfig('x509_extensions'),
-            'private_key_bits' => $this->config['default']['private_key_bits']
-        ];
-    }
-
-    /**
-     * Load Default configuration
-     */
-    protected function _setConfig($path = null)
-    {
-        $this->config = Yaml::parse($path);
-    }
-
-    /**
-     * Return certificates setting
-     *
-     * @param null $key
-     * @return mixed
-     */
-    protected function _getConfig($key = null)
-    {
-        return $this->config['certificates'][$this->type][$key];
-    }
-
-    /**
-     * Load CA Certificate from file
-     *
-     * @return string
-     */
-    protected function _getCaCert()
-    {
-        return file_get_contents($this->caDataRoot . $this->caName . DS .'cert.crt');
-    }
-
-    /**
-     * Load Ca Private key from file
-     *
-     * @return array
-     */
-    protected function _getCaKey()
-    {
-        return self::getPrivateKey($this->caName, $this->caPassword);
-    }
-
-    /**
-     * Method _altConfiguration
-     *
-     * Create alternative configuration based on altNames
-     * CNF file will have name based on certificate name - certificate-name.crt -> certificate-name.cnf
-     */
-    protected function _altConfiguration()
-    {
-        $cnfFile = file_get_contents($this->certConfigure['config']);
-        if ($this->altNames) {
-            $cnfFile .= $this->altNames->toString();
-            $altFileName = $this->fileName . DS . 'config.cnf';
-            $this->certConfigure['config'] = $altFileName;
-
-            file_put_contents($altFileName, $cnfFile);
-        }
-    }
-
-    /**
-     * Generates a new private key
-     */
-    protected function _generatePK()
-    {
-        return openssl_pkey_new($this->certConfigure);
-    }
-
-    /**
      * Returns key pair
      */
     public function getKeyPair($file = false, $passphrase = null)
     {
-        $pk = $this->_generatePK();
+        $rsa = new RSACryptoServiceProvider(4096);
+        $keypair = $rsa->generateKeyPair($passphrase, $this->certConfigure);
 
-        openssl_pkey_export($pk, $privKey, $passphrase, $this->certConfigure);
-        $pubKey = openssl_pkey_get_details($pk);
-
-        $keys = new KeyPair();
-        $keys->setPrivateKey($privKey)->setPublicKey($pubKey['key']);
+        $keys = KeyPair::initialize();
+        $keys->setPrivateKey($keypair->getPrivateKey())->setPublicKey($keypair->getPublicKey());
 
         if ($file) {
-            file_put_contents($this->fileName . static::PRIV_KEY_FILENAME , $keys->getPrivateKey());
-            file_put_contents($this->fileName . static::PUB_KEY_FILENAME , $keys->getPublicKey());
+            file_put_contents($this->fileName . static::PRIV_KEY_FILENAME, $keys->getPrivateKey());
+            file_put_contents($this->fileName . static::PUB_KEY_FILENAME, $keys->getPublicKey());
         }
 
         return $keys;
@@ -300,6 +223,48 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
+     * Load Default Configuration
+     */
+    protected function _setCertConfigure()
+    {
+        $this->certConfigure = [
+            'config' => $this->typeConfigurations[$this->type],
+            'x509_extensions' => $this->_getConfig('x509_extensions'),
+            'private_key_bits' => $this->config['default']['private_key_bits']
+        ];
+    }
+
+    /**
+     * Return certificates setting
+     *
+     * @param null $key
+     * @return mixed
+     */
+    protected function _getConfig($key = null)
+    {
+        return $this->config['certificates'][$this->type][$key];
+    }
+
+    /**
+     * Function getConfig
+     * returns loaded configuration
+     *
+     * @return mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Load Default configuration
+     */
+    protected function _setConfig($path = null)
+    {
+        $this->config = Yaml::parse($path);
+    }
+
+    /**
      * Function SetCa
      * Functions to set CA name to use for signing certificate
      *
@@ -313,21 +278,6 @@ class CertificateFactory implements CertificateFactoryInterface
         $this->caPassword = $password;
 
         return $this;
-    }
-
-    /**
-     * Function DomainName
-     * Returns Domain name
-     *
-     * @return DomainName
-     */
-    public function domainName()
-    {
-        if (!$this->domainName) {
-            $this->domainName = new DomainName();
-        }
-
-        return $this->domainName;
     }
 
     /**
@@ -346,17 +296,6 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
-     * Function getConfig
-     * returns loaded configuration
-     *
-     * @return mixed
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
      * Function SetName
      * Set name of certificate file
      *
@@ -368,8 +307,7 @@ class CertificateFactory implements CertificateFactoryInterface
         $this->fileName = $this->caDataRoot . $name . DS;
 
         // Create folder for future certificate
-        if(!file_exists($this->fileName))
-        {
+        if (!file_exists($this->fileName)) {
             mkdir($this->fileName, 0777, true);
         }
 
@@ -381,108 +319,81 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     public function sign($digest_alg = null)
     {
-        $this->crt = new SignedCertificate();
-
+        $this->crt = new X509Certificate2();
         $this->_altConfiguration();
 
         if (null !== $digest_alg) {
             $this->certConfigure['digest_alg'] = $digest_alg;
         }
 
-        //print_r($this->altNames);
-
-        /*
-        print_r([
-            $this->certConfigure, $this->domainName()->get()
-        ]);
-        */
-
-        $this->crt->setPrivateKey($this->_generatePK());
-
-
         $privKey = $this->crt->getPrivateKey();
         $this->crt->setCsr(openssl_csr_new($this->domainName()->get(), $privKey, $this->certConfigure));
 
         if (!$this->caName == null) {
             // If CA name is not null sign certificate with loaded CA certificate
-            $this->crt->setSignedCert(openssl_csr_sign(
-                $this->crt->getCsr(), $this->_getCaCert(), $this->_getCaKey(), $this->_getConfig('daysvalid'), $this->certConfigure, time()
-            ));
+            $this->crt->sign($this->_getCaCert(), $this->_getCaKey(), $this->_getConfig('daysvalid'), $this->certConfigure);
         } else {
             /**
              * Else self sign certificate
              * Its important for ROOT Certification authority certificate
              */
-            $this->crt->setSignedCert(openssl_csr_sign(
-                $this->crt->getCsr(), null, $this->crt->getPrivateKey(), $this->_getConfig('daysvalid'), $this->certConfigure, time()
-            ));
+            $this->crt->selfSigned($this->_getConfig('daysvalid'), $this->certConfigure);
         }
 
         return $this;
     }
 
     /**
-     * Create request for server signing
-     * For Client App
+     * Method _altConfiguration
+     *
+     * Create alternative configuration based on altNames
+     * CNF file will have name based on certificate name - certificate-name.crt -> certificate-name.cnf
+     */
+    protected function _altConfiguration()
+    {
+        $cnfFile = file_get_contents($this->certConfigure['config']);
+        if ($this->altNames) {
+            $cnfFile .= $this->altNames->toString();
+            $altFileName = $this->fileName . DS . 'config.cnf';
+            $this->certConfigure['config'] = $altFileName;
+
+            file_put_contents($altFileName, $cnfFile);
+        }
+    }
+
+    /**
+     * Function DomainName
+     * Returns Domain name
+     *
+     * @return DomainName
+     */
+    public function domainName()
+    {
+        if (!$this->domainName) {
+            $this->domainName = new DomainName();
+        }
+
+        return $this->domainName;
+    }
+
+    /**
+     * Load CA Certificate from file
      *
      * @return string
      */
-    public function createRequest()
+    protected function _getCaCert()
     {
-        $this->crt = new SignedCertificate();
-        $this->crt->setPrivateKey(openssl_pkey_new($this->certConfigure));
-
-        $privKey = $this->crt->getPrivateKey();
-        $this->crt->setCsr(openssl_csr_new($this->domainName()->get(), $privKey, $this->certConfigure));
-
-        $request = json_encode([
-            'csr' => $this->crt->getCsr()
-        ]);
-
-        // Send CSR to server and wait for signing
-        $response = $this->signWithServer($request);
-        $response = json_decode($response);
-        $this->crt->setSignedCert(openssl_x509_read($response->certificate));
-
-        return $this;
+        return file_get_contents($this->caDataRoot . $this->caName . DS . 'cert.crt');
     }
 
     /**
-     * @param array $options
-     */
-    public function toFile($options = [])
-    {
-        file_put_contents($this->fileName . 'code.txt', $this->crt->getEncryptionPass());
-        file_put_contents($this->fileName . 'req.pem', $this->crt->getCsr());
-        openssl_x509_export_to_file($this->crt->getSignedCert(), $this->fileName . static::PUB_KEY_FILENAME);
-        openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . static::PRIV_KEY_FILENAME, $this->crt->getEncryptionPass(), $this->certConfigure);
-
-        if (isset($options['decryptedPk']) && $options['decryptedPk'] == true) {
-            openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . 'unenc.key.pem', null, $this->certConfigure);
-        }
-
-        if (isset($options['pcks12']) && $options['pcks12'] == true) {
-            openssl_pkcs12_export_to_file($this->crt->getSignedCert(), $this->fileName . 'cert.pfx', $this->crt->getPrivateKey(), $this->crt->getEncryptionPass(), $this->certConfigure);
-        }
-    }
-
-
-    /**
-     * Sign certificate from client request
-     * For Server app
+     * Load Ca Private key from file
      *
-     * @return $this
+     * @return array
      */
-    public function signWithServer($request)
+    protected function _getCaKey()
     {
-        //server
-        $clientRequest = json_decode($request);
-        $this->crt->setSignedCert(openssl_csr_sign($clientRequest->csr, $this->_getCaCert(), $this->_getCaKey(), $this->_getConfig('daysvalid'), $this->certConfigure, time()));
-
-        // return signed file to user
-        openssl_x509_export($this->crt->getSignedCert(), $clientCertificate);
-
-        return json_encode(['certificate' => $clientCertificate]);
+        return self::getPrivateKey($this->caName, $this->caPassword);
     }
 
     /**
@@ -504,6 +415,69 @@ class CertificateFactory implements CertificateFactoryInterface
         }
 
         return file_get_contents($this->caDataRoot . $caName . DS . static::PRIV_KEY_FILENAME);
+    }
+
+    /**
+     * Create request for server signing
+     * For Client App
+     *
+     * @return string
+     */
+    public function createRequest()
+    {
+        $this->crt = new X509Certificate2();
+
+        $privKey = $this->crt->getPrivateKey();
+        $this->crt->setCsr(openssl_csr_new($this->domainName()->get(), $privKey, $this->certConfigure));
+
+        $request = json_encode([
+            'csr' => $this->crt->getCsr()
+        ]);
+
+        // Send CSR to server and wait for signing
+        $response = $this->signWithServer($request);
+        $response = json_decode($response);
+        $this->crt->setSignedCert(openssl_x509_read($response->certificate));
+
+        return $this;
+    }
+
+    /**
+     * Sign certificate from client request
+     * For Server app
+     *
+     * @return $this
+     */
+    public function signWithServer($request)
+    {
+        //server
+        $clientRequest = json_decode($request);
+        $this->crt->setSignedCert(openssl_csr_sign($clientRequest->csr, $this->_getCaCert(), $this->_getCaKey(), $this->_getConfig('daysvalid'), $this->certConfigure, time()));
+
+        // return signed file to user
+        openssl_x509_export($this->crt->getSignedCert(), $clientCertificate);
+
+        return json_encode(['certificate' => $clientCertificate]);
+    }
+
+    /**
+     * @param bool $decryptPK
+     * @param bool $pcks12
+     */
+    public function toFile($decryptPK = false, $pcks12 = false)
+    {
+        file_put_contents($this->fileName . 'code.txt', $this->crt->getEncryptionPass());
+        file_put_contents($this->fileName . 'req.pem', $this->crt->getCsr());
+        openssl_x509_export_to_file($this->crt->getSignedCert(), $this->fileName . static::PUB_KEY_FILENAME);
+        openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . static::PRIV_KEY_FILENAME, $this->crt->getEncryptionPass(), $this->certConfigure);
+
+        if ($decryptPK) {
+            openssl_pkey_export_to_file($this->crt->getPrivateKey(), $this->fileName . 'unenc.key.pem', null, $this->certConfigure);
+        }
+
+        if ($pcks12) {
+            openssl_pkcs12_export_to_file($this->crt->getSignedCert(), $this->fileName . 'cert.pfx', $this->crt->getPrivateKey(), $this->crt->getEncryptionPass(), $this->certConfigure);
+        }
     }
 
     /**
