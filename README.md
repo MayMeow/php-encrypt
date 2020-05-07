@@ -16,7 +16,7 @@ And intialize it withhin your script
 $cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 ```
 
-## Usage
+## Usage [WIP]
 
 ### Path Configuring
 
@@ -218,14 +218,8 @@ SEE changelog
 
 ## Credits
 
-* MayMeow
-* mARTin
+* [Emma "MayMeow" Watson](https://github.com/MayMeow)
 
 ## License
 
 MIT
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/MayMeow/may-encrypt/badge.svg?style=beer-square)](https://beerpay.io/MayMeow/may-encrypt)  [![Beerpay](https://beerpay.io/MayMeow/may-encrypt/make-wish.svg?style=flat-square)](https://beerpay.io/MayMeow/may-encrypt?focus=wish)
