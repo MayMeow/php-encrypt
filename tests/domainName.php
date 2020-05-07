@@ -108,12 +108,12 @@ $cf->setType("server")
 
 /*$user->domainName()
     ->setCommonName('Emma Jung')
-    ->setEmailAddress('emma@kukolos.sk');
+    ->setEmailAddress('emma@Company.sk');
 
 $user->getAltNames()
-    ->setDns('kukolos.sk')
+    ->setDns('Company.sk')
     ->setDns('gitlab.cafe')
-    ->setDns('*.kukolos.sk')
+    ->setDns('*.Company.sk')
     ->setIp('127.0.0.1');
 
 $crt = $user->setType('user')
@@ -122,16 +122,16 @@ $crt = $user->setType('user')
     ->sign()->toFile(true);*/
 
 /*$cf->domainName()
-    ->setCommonName('Metalport Kosice')
-    ->setOrganizationName('Metalport s.r.o.')
+    ->setCommonName('Company Osaka')
+    ->setOrganizationName('Company s.r.o.')
     ->setCountryName('SK')
-    ->setLocalityName('Kosice');
+    ->setLocalityName('Osaka');
 
 $cf->getAltNames()
     ->setIp('85.159.105.164');
 
 $cf->setType('server')
-    ->setName('Metalport-Kosice')
+    ->setName('Company-Osaka')
     ->setCa('intermediate', 10321033)
     ->sign()->toFile();
 
@@ -142,8 +142,8 @@ print_r(json_decode($crt));*/
 /*$server = new \MayMeow\Factory\CertificateFactory();
 
 $server->setType('server', [
-    'DNS=webmail.zsokruzna.sk',
-    'DNS=vpn.zsokruzna.sk',
+    'DNS=webmail.company.sk',
+    'DNS=vpn.company.sk',
 ])->setName('')
     ->setCa('may-intermediate-ca')
     ->sign();*/
@@ -201,17 +201,17 @@ $encr = base64_decode(file_get_contents('./cakeapp.license.txt'));
 echo $sf->setString($encr)->decrypt();*/
 
 /*$cf->domainName()
-    ->setCommonName("webmail.zsokruzna.sk")
+    ->setCommonName("webmail.company.sk")
     ->setOrganizationalUnitName("VPN")
-    ->setOrganizationName("Zakladna skola Okruzna 6 Michalovce");
+    ->setOrganizationName("Company 7 Town");
 
 $cf->getAltNames()
-    ->setDns("webmail.zsokruzna.sk")
-    ->setDns("vpn.zsokruzna.sk");
+    ->setDns("webmail.company.sk")
+    ->setDns("vpn.company.sk");
 
 $cf->setType("server")
-    ->setName("Gnoma/Webpages/webmail-zsokruzna-sk")
-    ->setCa('Gnoma/intermediate', '10321033')
+    ->setName("Company/Webpages/webmail-company-sk")
+    ->setCa('Company/intermediate', '10321033')
     ->sign()->toFile();*/
 
 /*var_dump($cf->setType('ca')->setName('keys-2')
