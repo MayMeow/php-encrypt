@@ -11,7 +11,11 @@
     ],
     "autoload": {
         "psr-4": {
-            "MayMeow\\": "src",
+            "MayMeow\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "MayMeow\\Tests\\": "tests"
         }
     },

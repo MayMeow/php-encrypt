@@ -17,6 +17,7 @@
 namespace MayMeow\Factory;
 
 use MayMeow\Cert\X509Certificate2;
+use MayMeow\Interfaces\WriterInterface;
 use MayMeow\Model\AltNames;
 use MayMeow\Model\DomainName;
 use MayMeow\Model\SignedCertificate;
@@ -36,12 +37,12 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Private key file name
      */
-    protected const PRIV_KEY_FILENAME = 'key.pem';
+    const PRIV_KEY_FILENAME = 'key.pem';
 
     /**
      * Public key file name
      */
-    protected const PUB_KEY_FILENAME = 'cert.crt';
+    const PUB_KEY_FILENAME = 'cert.crt';
 
     /**
      * @var DomainName
@@ -123,9 +124,7 @@ class CertificateFactory implements CertificateFactoryInterface
     public function __construct(EncryptConfiguration $encryptConfiguration)
     {
         $this->_setConfig($encryptConfiguration->get());
-
         $this->_setDataPath(WWW_ROOT);
-
         $this->_setTemplatesPath(TEMPLATE_ROOT);
     }
 
@@ -445,8 +444,8 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Sign certificate from client request
      * For Server app
-     *
-     * @return $this
+     * @param $request
+     * @return false|string
      */
     public function signWithServer($request)
     {
@@ -461,6 +460,27 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
+     * @param $writerInterfaceName
+     * @return WriterInterface
+     * @throws \Exception
+     */
+    public function using($writerInterfaceName)
+    {
+        $wi = new $writerInterfaceName();
+
+        if ($wi instanceof WriterInterface) {
+            $wi->setCert($this->crt);
+            $wi->setName($this->fileName);
+            $wi->setCertConfiguration($this->certConfigure);
+
+            return $wi;
+        }
+
+        throw new \Exception('Wrong inferface');
+    }
+
+    /**
+     * @deprecated See using
      * @param bool $decryptPK
      * @param bool $pcks12
      */
