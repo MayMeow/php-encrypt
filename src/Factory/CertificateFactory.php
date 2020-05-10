@@ -20,6 +20,7 @@ use MayMeow\Cert\X509Certificate2;
 use MayMeow\Interfaces\WriterInterface;
 use MayMeow\Model\AltNames;
 use MayMeow\Model\DomainName;
+use MayMeow\Model\KeyPairInterface;
 use MayMeow\Model\SignedCertificate;
 use MayMeow\RSA\RSACryptoServiceProvider;
 use Symfony\Component\Yaml\Yaml;
@@ -33,6 +34,9 @@ class CertificateFactory implements CertificateFactoryInterface
     const TYPE_CERTIFICATION_AUTHORITY = "ca";
     const TYPE_SERVER = "server";
     const TYPE_USER = "user";
+
+    /** @var KeyPairInterface $ca */
+    protected $ca;
 
     /**
      * Private key file name
@@ -267,6 +271,8 @@ class CertificateFactory implements CertificateFactoryInterface
      * Function SetCa
      * Functions to set CA name to use for signing certificate
      *
+     * @deprecated look setCaFrom
+     *
      * @param null $name
      * @param null $password
      * @return $this
@@ -275,6 +281,17 @@ class CertificateFactory implements CertificateFactoryInterface
     {
         $this->caName = $name;
         $this->caPassword = $password;
+
+        return $this;
+    }
+
+    /**
+     * @param KeyPairInterface $kp
+     * @return $this
+     */
+    public function setCaFrom(KeyPairInterface $kp)
+    {
+        $this->ca = $kp;
 
         return $this;
     }
@@ -330,7 +347,7 @@ class CertificateFactory implements CertificateFactoryInterface
 
         if (!$this->caName == null) {
             // If CA name is not null sign certificate with loaded CA certificate
-            $this->crt->sign($this->_getCaCert(), $this->_getCaKey(), $this->_getConfig('daysvalid'), $this->certConfigure);
+            $this->crt->sign($this->ca->getPublicKey(), $this->ca->getPrivateKey(), $this->_getConfig('daysvalid'), $this->certConfigure);
         } else {
             /**
              * Else self sign certificate
@@ -377,6 +394,7 @@ class CertificateFactory implements CertificateFactoryInterface
 
     /**
      * Load CA Certificate from file
+     * @deprecated
      *
      * @return string
      */
@@ -388,6 +406,8 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Load Ca Private key from file
      *
+     * @deprecated
+     *
      * @return array
      */
     protected function _getCaKey()
@@ -398,6 +418,8 @@ class CertificateFactory implements CertificateFactoryInterface
     /**
      * Method getCaKey
      * Returns array for encrypted keys and string othervise
+     *
+     * @deprecated
      *
      * @param $caName
      * @param $caPassword

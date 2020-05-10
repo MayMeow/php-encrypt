@@ -2,6 +2,7 @@
 
 namespace MayMeow\Tests\Features;
 
+use MayMeow\Loaders\FileLoader;
 use MayMeow\Tests\TestCase;
 use MayMeow\Factory\CertificateFactory;
 use MayMeow\Model\EncryptConfiguration;
@@ -44,7 +45,7 @@ class SigningCertificatesTest extends TestCase
 
         $this->certificateFactory->setType(CertificateFactory::TYPE_INTERMEDIATE)
             ->setName('test-intermediate-ca')
-            ->setCa('test-ca', file_get_contents(WWW_ROOT . 'test-ca' . DS . 'code.txt'))
+            ->setCaFrom(new FileLoader('test-ca'))
             ->sign()->using(FileWriter::class)->write();
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-intermediate-ca' . DS . 'cert.crt'));
@@ -61,7 +62,8 @@ class SigningCertificatesTest extends TestCase
 
         $this->certificateFactory->setType(CertificateFactory::TYPE_USER)
             ->setName('test-user_certificate')
-            ->setCa('test-intermediate-ca', file_get_contents(WWW_ROOT . 'test-intermediate-ca' . DS . 'code.txt'))
+            #->setCa('test-intermediate-ca', file_get_contents(WWW_ROOT . 'test-intermediate-ca' . DS . 'code.txt'))
+            ->setCaFrom(new FileLoader('test-intermediate-ca'))
             ->sign()->using(FileWriter::class)->write();
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-user_certificate' . DS . 'cert.crt'));
@@ -83,7 +85,8 @@ class SigningCertificatesTest extends TestCase
 
         $this->certificateFactory->setType(CertificateFactory::TYPE_SERVER)
             ->setName('test-server-certificate')
-            ->setCa('test-intermediate-ca', file_get_contents(WWW_ROOT . 'test-intermediate-ca' . DS . 'code.txt'))
+            #->setCa('test-intermediate-ca', file_get_contents(WWW_ROOT . 'test-intermediate-ca' . DS . 'code.txt'))
+            ->setCaFrom(new FileLoader('test-intermediate-ca'))
             ->sign()
             ->using(FileWriter::class)->write();
 
@@ -101,7 +104,7 @@ class SigningCertificatesTest extends TestCase
 
         $this->certificateFactory->setType(CertificateFactory::TYPE_CODE_SIGN)
             ->setName('test-user_certificate')
-            ->setCa('test-intermediate-ca', file_get_contents(WWW_ROOT . 'test-intermediate-ca' . DS . 'code.txt'))
+            ->setCaFrom(new FileLoader('test-intermediate-ca'))
             ->sign()->using(FileWriter::class)->write();
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-user_certificate' . DS . 'cert.crt'));
