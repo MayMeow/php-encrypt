@@ -335,16 +335,16 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     public function sign($digest_alg = null)
     {
-        $this->crt = new X509Certificate2();
+        // Write Alternative configurations before you create CSR
         $this->_altConfiguration();
-
         if (null !== $digest_alg) {
             $this->certConfigure['digest_alg'] = $digest_alg;
         }
 
-        $privKey = $this->crt->getPrivateKey();
-        $this->crt->setCsr(openssl_csr_new($this->domainName()->get(), $privKey, $this->certConfigure));
+        // Create CSR
+        $this->crt = new X509Certificate2($this->domainName, $this->certConfigure);
 
+        // Sign CSR
         if (!$this->caName == null) {
             // If CA name is not null sign certificate with loaded CA certificate
             $this->crt->sign($this->ca->getPublicKey(), $this->ca->getPrivateKey(), $this->_getConfig('daysvalid'), $this->certConfigure);
@@ -502,7 +502,8 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
-     * @deprecated See using
+     * @deprecated
+     * @see using()
      * @param bool $decryptPK
      * @param bool $pcks12
      */

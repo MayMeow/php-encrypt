@@ -2,6 +2,7 @@
 
 namespace MayMeow\Cert;
 
+use MayMeow\Model\DomainName;
 use MayMeow\Model\KeyPair;
 use MayMeow\Model\KeyPairInterface;
 use MayMeow\RSA\RSACryptoServiceProvider;
@@ -21,12 +22,15 @@ class X509Certificate2
 
     protected $encryptionPass;
 
-    public function __construct()
+    public function __construct(DomainName $dn, array $configArgs)
     {
         $this->encryptionPass = rand(100000, 999999);
         $this->_getRsa();
         $this->privateKey = KeyPair::initialize();
         $this->privateKey->setPrivateKey($this->rsa->generateKeyPair()->getPrivateKey());
+
+        $privKey = $this->privateKey->getPrivateKey();
+        $this->csr = openssl_csr_new($dn->get(), $privKey, $configArgs);
     }
 
     protected function _getRsa()
