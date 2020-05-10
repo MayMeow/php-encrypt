@@ -19,6 +19,11 @@ namespace MayMeow\Loaders;
 use MayMeow\Model\KeyPairInterface;
 use MayMeow\Factory\CertificateFactory;
 
+/**
+ * Class KeyPairLoader
+ * @deprecated
+ * @package MayMeow\Loaders
+ */
 class KeyPairLoader implements KeyPairLoaderInterface
 {
     /**

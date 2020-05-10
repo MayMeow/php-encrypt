@@ -24,7 +24,14 @@
 namespace MayMeow\Factory;
 
 use MayMeow\Loaders\KeyPairLoaderInterface;
+use MayMeow\RSA\RSACryptoServiceProvider;
 
+/**
+ * Class SecurityFactory
+ * @deprecated
+ * @see RSACryptoServiceProvider
+ * @package MayMeow\Factory
+ */
 class SecurityFactory
 {
 
