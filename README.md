@@ -45,6 +45,8 @@ If you don use any of this commands default values will be used.
 1. Create Selfsigned CA
 
 ```php
+use MayMeow\Writers\FileWriter;
+
 $cf->domainName()
     ->setOrganizationName('Hogwarts School of Witchcraft and Wizardry')
     ->setCountryName('SK')
@@ -52,12 +54,16 @@ $cf->domainName()
 
 $cf->setType('ca')
     ->setName('Hogwarts')
-    ->sign()->toFile();
+    ->sign()
+    ->using(FileWriter::class)->write();
 ```
 
 2. Create Intermediate CAs. This type of CA you will use for signing users and servers certificates.
 
 ```php
+use MayMeow\Writers\FileWriter;
+use MayMeow\Loaders\FileLoader;
+
 $cf->domainName()
     ->setOrganizationName('Hogwarts School of Witchcraft and Wizardry')
     ->setCountryName('SK')
@@ -66,8 +72,8 @@ $cf->domainName()
 
 $cf->setType('intermediate')
     ->setName('Hogwarts/Slytherin')
-    ->setCa('Hogwarts', '200634')
-    ->sign()->toFile();
+    ->setCaFrom(new FileLoader('test-ca'))
+    ->sign()->using(FileWriter::class)->write();
 ```
 
 3. Sign User or server certificate
@@ -75,6 +81,9 @@ $cf->setType('intermediate')
 * User Certificate
 
 ```php
+use MayMeow\Writers\FileWriter;
+use MayMeow\Loaders\FileLoader;
+
 $cf->domainName()
     ->setCommonName('Hermione Granger')
     ->setEmailAddress('hermione.granger@g.hogwarts.local')
@@ -83,13 +92,16 @@ $cf->domainName()
 
 $cf->setType('user')
     ->setName('Hogwarts/Students/hermione-granger')
-    ->setCa('Hogwarts/Gryffindor', '296545')
-    ->sign()->toFile(true);
+    ->setCaFrom(new FileLoader('test-ca'))
+    ->sign()->using(FileWriter::class)->write();
 ```
 
 * Server Certificate
 
 ```php
+use MayMeow\Writers\FileWriter;
+use MayMeow\Loaders\FileLoader;
+
 $cf->domainName()
     ->setCommonName("gryffindor.hogwarts.local")
     ->setOrganizationalUnitName("Hogwarts Webpages")
@@ -102,8 +114,8 @@ $cf->getAltNames()
 
 $cf->setType("server")
     ->setName("Hogwarts/Webpages/griffindor-hogwarts-local")
-    ->setCa('Hogwarts/Gryffindor', '296545')
-    ->sign()->toFile();
+    ->setCaFrom(new FileLoader('test-ca'))
+    ->sign()->using(FileWriter::class)->write();
 ```
 
 4. Each certificatess are located in `webroot/<certificate-name>`. Certificate Names can be set
@@ -116,24 +128,40 @@ __Certificate Key pass__ is located in `code.txt` file in each certificate folde
 Windows users need certificate in PKCS12 format, `.pfx` file extension. To create this type of file use
 
 ```php
-...->toFile(true);
+// public function write($decryptPK = false, $pcks12 = false);
+...->write(false, true);
 ```
 
 ### Creating key pairs
 
-If you dont need certificate you can create key pair `from v2018.4`
+If you dont need certificate you can create key pair `from v2018.4` updated in `v2019.5`
 
 ```php
-$keys = $cf->setType('ca')->setName('keys-2')->getKeyPair(true); // true means keys will be stored into files
-$protected_keys = $cf->setType('ca')->setName('keys-2')->getKeyPair(true, 'pa$$phras3'); // will generate keypair with encrypted private key
+use MayMeow\RSA\RSACryptoServiceProvider;
 
-$keys->getPrivateKey(); // returns private key
-$keys->getPublicKey(); // returns public key
+$this->csp = new RSACryptoServiceProvider();
+$keypair = $this->csp->generateKeyPair('yourSuperStrongPas$$phrase'); // returns RSAParameters
+
+// privateKey & public key
+$keypair->getPrivateKey();
+$keypair->getPublicKey();
 ```
 
 ### Loaders 
 
 Loaders are new feature that can be used to load Key pair `from v2018.5`. Each loader implements LoaderInterfaace. To use them follow example below. If you have protected (encrypted) private key **loaders are place where is decrypting based on passphrase**. **SecurityFactory using only decrpted private_keys**.
+
+`v2020.5` will change using loaders. No more is required to use passphrase when you load certificate from file
+
+```php
+use MayMeow\Loaders\FileLoader;
+
+$kp = new FileLoader('test-ca');
+$kp->getPublicKey();
+$kp->getPrivateKey();
+```
+
+Following are **Deprecated** because Security factory is going to be removed in `2021.*`.
 
 ```php
 // use CertificateFactory and generated keys
@@ -156,7 +184,7 @@ $kl->getPublicKey() // return string with public key
 $kl->getPrivateKey() // return string with private key
 ```
 
-## Security factory
+## Security factory **DEPRECATED** Will be replaced by RSACryptoServiceProvider in `2021.*`
 
 Security factory can be used for encryptig and decripting strings.
 
@@ -200,6 +228,30 @@ $enc = base64_encode($sf->publicEncrypt());
 ```php
 $sf->setString(base64_decode($enc));
 $decrypted = base64_encode($sf->privateDecrypt());
+```
+
+## RSA Crypto Security Provider
+
+RSACSP will replace Security factory. It can be used to generate keypairs and for asymetric encryption.
+
+```php
+// Generate keypPairs
+use MayMeow\RSA\RSACryptoServiceProvider;
+
+$this->csp = new RSACryptoServiceProvider();
+$keypair = $this->csp->generateKeyPair('yourSuperStrongPas$$phrase'); // returns RSAParameters
+
+// Ecrypt and decrypt
+$plainText = 'Hello World!';
+$encryptedText = $this->csp->encrypt($plainText);
+$decrypted = $this->csp->decrypt($encryptedText);
+
+// Signing
+$signature = $this->csp->sign($plainText);
+$this->csp->verify($plainText, $signature); // true or false
+
+// md5 fingerprint
+$this->csp->getFingerPrint();
 ```
 
 Example above will encrypt text with public key and decrypt with private. If you want encrypt with private just use `$sf->encrypt()` and `$sf->decrypt` for decrypting.
