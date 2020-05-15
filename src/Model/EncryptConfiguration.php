@@ -23,10 +23,16 @@
 
 namespace MayMeow\Model;
 
+use Symfony\Component\Yaml\Yaml;
+
 class EncryptConfiguration
 {
     protected $configFile;
 
+    /**
+     * EncryptConfiguration constructor
+     * @param null $path Full path to your config file
+     */
     public function __construct($path = null)
     {
         if (null == $path) {
@@ -36,8 +42,46 @@ class EncryptConfiguration
         }
     }
 
+    /**
+     * Parse configuration file
+     */
+    public function parse()
+    {
+        return Yaml::parse($this->configFile);
+    }
+
+    /**
+     * @deprecated
+     * @return false|string
+     */
     public function get()
     {
         return $this->configFile;
+    }
+
+    /**
+     * @param $templateName
+     * @param null $templateRoot
+     * @return string
+     */
+    public function getTemplatePath($templateName, $templateRoot = null)
+    {
+        if ($templateRoot == null) $templateRoot = TEMPLATE_ROOT;
+
+        return $templateRoot . $templateName;
+    }
+
+    /**
+     * @param null $templateRoot
+     * @return string
+     */
+    public function getCaTemplate($templateRoot = null)
+    {
+        return $this->getTemplatePath('ca_certificate.cnf', $templateRoot);
+    }
+
+    public function getIntermediateTemplate($templateRoot = null)
+    {
+        return $this->getTemplatePath('intermediate_certificate.cnf', $templateRoot);
     }
 }

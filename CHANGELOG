@@ -1,3 +1,30 @@
+v 2020.5 (Unreleased - in progress)
+
+Added X509Certificate2 and RSACryptoService provider
+
+* Add X509Certificate2 using to create and signing certificates
+* Writers can be used to create classes to export certificates to filesystem or database...
+* FileWriter
+
+
+Deprecations
+
+* SignedCertificate is deprecated use X509Certificate2 instead
+* Constants CertificateFactory::TYPE_INTERMEDIATE, TYPE_CODE_SIGN, TYPE_CERTIFICATION_AUTHORITY, TYPE_SERVER, TYPE_USER
+are deprecated. Use X509Certificate2 constants instead.
+* CertificateFactory::_setDataPath deprecated and will be removed
+* CertificateFactory::_setTemplatesPath and CertificateFactory::setTemplatesPath templates are note configured with CertificateFactory::_setCertConfigure
+* CertificateFactory::setDataPath was not used
+* setConfigPath
+* _getConfig
+* _setConfig
+* setCa
+* _getCaCert
+* _getCaKey
+* getPrivateKey
+* toFile
+* getPublicKey
+
 v 2018.8.2
 
 Added abilit with that can you protect your private keys when you not generating certiicates but only key pairs.

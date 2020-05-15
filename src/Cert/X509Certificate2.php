@@ -9,6 +9,12 @@ use MayMeow\RSA\RSACryptoServiceProvider;
 
 class X509Certificate2
 {
+    const TYPE_CA = 'ca';
+    const TYPE_USER = 'user';
+    const TYPE_SERVER = 'server';
+    const TYPE_CODE_SIGN = 'code_sign';
+    const TYPE_INTERMEDIATE = 'intermediate';
+
     /** @var RSACryptoServiceProvider */
     protected $rsa;
 

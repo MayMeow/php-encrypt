@@ -2,6 +2,7 @@
 
 namespace MayMeow\Tests\Features;
 
+use MayMeow\Cert\X509Certificate2;
 use MayMeow\Loaders\FileLoader;
 use MayMeow\Tests\TestCase;
 use MayMeow\Factory\CertificateFactory;
@@ -27,9 +28,9 @@ class SigningCertificatesTest extends TestCase
             ->setCountryName('SK')
             ->setCommonName('Test Root CA');
 
-        $this->certificateFactory->setType(CertificateFactory::TYPE_CERTIFICATION_AUTHORITY)
+        $this->certificateFactory->setType(X509Certificate2::TYPE_CA)
             ->setName('test-ca')
-            ->sign()->using(FileWriter::class)->write();
+            ->sign()->writeTo(FileWriter::class);
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-ca' . DS . 'cert.crt'));
     }
@@ -43,10 +44,10 @@ class SigningCertificatesTest extends TestCase
             ->setOrganizationalUnitName('Intermediate Certificate authority')
             ->setCommonName('Test Intermediate CA');
 
-        $this->certificateFactory->setType(CertificateFactory::TYPE_INTERMEDIATE)
+        $this->certificateFactory->setType(X509Certificate2::TYPE_INTERMEDIATE)
             ->setName('test-intermediate-ca')
             ->setCaFrom(new FileLoader('test-ca'))
-            ->sign()->using(FileWriter::class)->write();
+            ->sign()->writeTo(FileWriter::class);
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-intermediate-ca' . DS . 'cert.crt'));
     }
@@ -60,11 +61,10 @@ class SigningCertificatesTest extends TestCase
             ->setOrganizationalUnitName('Test Organization Unit')
             ->setCommonName('Jane Doe');
 
-        $this->certificateFactory->setType(CertificateFactory::TYPE_USER)
+        $this->certificateFactory->setType(X509Certificate2::TYPE_USER)
             ->setName('test-user_certificate')
-            #->setCa('test-intermediate-ca', file_get_contents(WWW_ROOT . 'test-intermediate-ca' . DS . 'code.txt'))
             ->setCaFrom(new FileLoader('test-intermediate-ca'))
-            ->sign()->using(FileWriter::class)->write();
+            ->sign()->writeTo(FileWriter::class);
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-user_certificate' . DS . 'cert.crt'));
     }
@@ -83,12 +83,11 @@ class SigningCertificatesTest extends TestCase
             ->setDns("*.webserver.dev")
             ->setIp("10.0.0.1");
 
-        $this->certificateFactory->setType(CertificateFactory::TYPE_SERVER)
+        $this->certificateFactory->setType(X509Certificate2::TYPE_SERVER)
             ->setName('test-server-certificate')
-            #->setCa('test-intermediate-ca', file_get_contents(WWW_ROOT . 'test-intermediate-ca' . DS . 'code.txt'))
             ->setCaFrom(new FileLoader('test-intermediate-ca'))
             ->sign()
-            ->using(FileWriter::class)->write();
+            ->writeTo(FileWriter::class);
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-user_certificate' . DS . 'cert.crt'));
     }
@@ -102,10 +101,10 @@ class SigningCertificatesTest extends TestCase
             ->setOrganizationalUnitName('Test Organization Unit')
             ->setCommonName('Jane Doe');
 
-        $this->certificateFactory->setType(CertificateFactory::TYPE_CODE_SIGN)
+        $this->certificateFactory->setType(X509Certificate2::TYPE_CODE_SIGN)
             ->setName('test-user_certificate')
             ->setCaFrom(new FileLoader('test-intermediate-ca'))
-            ->sign()->using(FileWriter::class)->write();
+            ->sign()->writeTo(FileWriter::class);
 
         $this->assertTrue(file_exists(WWW_ROOT . 'test-user_certificate' . DS . 'cert.crt'));
     }

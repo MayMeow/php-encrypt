@@ -20,25 +20,19 @@ $cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfigur
 
 ### Path Configuring
 
-To Set different Root path for generated certificates use
+To set diferent path for cert templates (cnf files) use:
 
 ```php
-$cf->setDataPath('/your/path/to/folder');
-```
-
-If you want to save templates for generating certificates on different folder you can set this path with:
-
-```php
-$cf->setTemplatesPath('/path/to/templates/folder');
+// dont forget to use trailing slash
+$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration(), '/path/to/templates/folder/');
 ```
 
 To chanage folder to change path to your configuration file
 
 ```php
-$cf->setConfigPath('/path/to/templates/folder/my_config_file.yml');
+// use full path to your configuration file include name of this file
+$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration('/path/to/templates/folder/my_config_file.yml'));
 ```
-
-If you don use any of this commands default values will be used.
 
 ### Certificate Signing
 
@@ -55,7 +49,7 @@ $cf->domainName()
 $cf->setType('ca')
     ->setName('Hogwarts')
     ->sign()
-    ->using(FileWriter::class)->write();
+    ->writeTo(FileWriter::class);
 ```
 
 2. Create Intermediate CAs. This type of CA you will use for signing users and servers certificates.
@@ -73,7 +67,7 @@ $cf->domainName()
 $cf->setType('intermediate')
     ->setName('Hogwarts/Slytherin')
     ->setCaFrom(new FileLoader('test-ca'))
-    ->sign()->using(FileWriter::class)->write();
+    ->sign()->writeTo(FileWriter::class);
 ```
 
 3. Sign User or server certificate
@@ -93,7 +87,7 @@ $cf->domainName()
 $cf->setType('user')
     ->setName('Hogwarts/Students/hermione-granger')
     ->setCaFrom(new FileLoader('test-ca'))
-    ->sign()->using(FileWriter::class)->write();
+    ->sign()->writeTo(FileWriter::class);
 ```
 
 * Server Certificate
@@ -115,7 +109,7 @@ $cf->getAltNames()
 $cf->setType("server")
     ->setName("Hogwarts/Webpages/griffindor-hogwarts-local")
     ->setCaFrom(new FileLoader('test-ca'))
-    ->sign()->using(FileWriter::class)->write();
+    ->sign()->writeTo(FileWriter::class);
 ```
 
 4. Each certificatess are located in `webroot/<certificate-name>`. Certificate Names can be set

@@ -29,10 +29,29 @@ use MayMeow\Model\EncryptConfiguration;
 
 class CertificateFactory implements CertificateFactoryInterface
 {
+    /**
+     * @deprecated
+     */
     const TYPE_INTERMEDIATE = "intermediate";
+
+    /**
+     * @deprecated
+     */
     const TYPE_CODE_SIGN = "code_sign";
+
+    /**
+     * @deprecated
+     */
     const TYPE_CERTIFICATION_AUTHORITY = "ca";
+
+    /**
+     * @deprecated
+     */
     const TYPE_SERVER = "server";
+
+    /**
+     * @deprecated
+     */
     const TYPE_USER = "user";
 
     /** @var KeyPairInterface $ca */
@@ -125,16 +144,35 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     protected $caDataRoot;
 
-    public function __construct(EncryptConfiguration $encryptConfiguration)
+    /**
+     * Path to template store
+     * @var string $templateRootPath
+     */
+    protected $templateRootPath;
+
+    /**
+     * Configuration for certificates
+     * @var EncryptConfiguration $_configure
+     */
+    private $_config;
+
+    public function __construct(EncryptConfiguration $encryptConfiguration, $templateRootPath = null)
     {
-        $this->_setConfig($encryptConfiguration->get());
-        $this->_setDataPath(WWW_ROOT);
-        $this->_setTemplatesPath(TEMPLATE_ROOT);
+        $this->templateRootPath = $templateRootPath;
+        $this->caDataRoot = WWW_ROOT;
+
+        if ($this->_config == null)
+            $this->_config = $encryptConfiguration;
+
+        $this->config = $this->_config->parse();
+
+        //$this->_setDataPath(WWW_ROOT);
+        //$this->_setTemplatesPath($templateRootPath);
     }
 
     /**
      * Set path to CA root data folder
-     *
+     * @deprecated
      * @param $rootPath
      */
     protected function _setDataPath($rootPath)
@@ -144,7 +182,7 @@ class CertificateFactory implements CertificateFactoryInterface
 
     /**
      * Set paths for all templates
-     *
+     * @deprecated
      * @param $templateRootPath
      */
     protected function _setTemplatesPath($templateRootPath)
@@ -178,6 +216,7 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
+     * @deprecated
      * @param $path
      * @return $this
      */
@@ -189,6 +228,7 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
+     * @deprecated
      * @param $path
      * @return $this
      */
@@ -200,6 +240,7 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
+     * @reprecated
      * @param $path
      * @return $this
      */
@@ -230,8 +271,30 @@ class CertificateFactory implements CertificateFactoryInterface
      */
     protected function _setCertConfigure()
     {
+        $configPath = '';
+        switch ($this->type) {
+            case X509Certificate2::TYPE_CA:
+                $configPath = $this->_config->getCaTemplate($this->templateRootPath);
+                break;
+            case X509Certificate2::TYPE_INTERMEDIATE:
+                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                break;
+            case X509Certificate2::TYPE_USER:
+                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                break;
+            case X509Certificate2::TYPE_SERVER:
+                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                break;
+            case X509Certificate2::TYPE_CODE_SIGN:
+                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                break;
+            default:
+                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                break;
+        }
+
         $this->certConfigure = [
-            'config' => $this->typeConfigurations[$this->type],
+            'config' => $configPath,
             'x509_extensions' => $this->_getConfig('x509_extensions'),
             'private_key_bits' => $this->config['default']['private_key_bits']
         ];
@@ -239,7 +302,7 @@ class CertificateFactory implements CertificateFactoryInterface
 
     /**
      * Return certificates setting
-     *
+     * @deprecated
      * @param null $key
      * @return mixed
      */
@@ -260,6 +323,7 @@ class CertificateFactory implements CertificateFactoryInterface
     }
 
     /**
+     * @deprecated
      * Load Default configuration
      */
     protected function _setConfig($path = null)
@@ -336,7 +400,7 @@ class CertificateFactory implements CertificateFactoryInterface
     public function sign($digest_alg = null)
     {
         // Write Alternative configurations before you create CSR
-        $this->_altConfiguration();
+        $this->_GenerateAltConfiguration();
         if (null !== $digest_alg) {
             $this->certConfigure['digest_alg'] = $digest_alg;
         }
@@ -365,7 +429,7 @@ class CertificateFactory implements CertificateFactoryInterface
      * Create alternative configuration based on altNames
      * CNF file will have name based on certificate name - certificate-name.crt -> certificate-name.cnf
      */
-    protected function _altConfiguration()
+    protected function _GenerateAltConfiguration()
     {
         $cnfFile = file_get_contents($this->certConfigure['config']);
         if ($this->altNames) {
@@ -486,7 +550,7 @@ class CertificateFactory implements CertificateFactoryInterface
      * @return WriterInterface
      * @throws \Exception
      */
-    public function using($writerInterfaceName)
+    public function writeTo($writerInterfaceName)
     {
         $wi = new $writerInterfaceName();
 
@@ -495,7 +559,7 @@ class CertificateFactory implements CertificateFactoryInterface
             $wi->setName($this->fileName);
             $wi->setCertConfiguration($this->certConfigure);
 
-            return $wi;
+            return $wi->write();
         }
 
         throw new \Exception('Wrong inferface');
@@ -525,7 +589,7 @@ class CertificateFactory implements CertificateFactoryInterface
 
     /**
      * Method getPublicKey
-     *
+     * @deprecated
      * @param null $caName
      * @return bool|string
      */

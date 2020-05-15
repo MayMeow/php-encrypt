@@ -9,6 +9,11 @@ use MayMeow\Loaders\KeyPairFileLoader;
 use MayMeow\Loaders\KeyPairLoader;
 use MayMeow\Model\EncryptConfiguration;
 
+/**
+ * Class SecurityFactoryTest
+ * @deprecated
+ * @package MayMeow\Tests\Features
+ */
 class SecurityFactoryTest extends TestCase 
 {
     protected const KEY_PAIR_NAME = 'keys-2';
