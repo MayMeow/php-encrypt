@@ -1,8 +1,8 @@
 <?php
 namespace MayMeow\Tests\RSA;
 
+use MayMeow\Cryptography\RSA\RSAParametersInterface;
 use MayMeow\RSA\RSACryptoServiceProvider;
-use MayMeow\RSA\RSAParameters;
 use MayMeow\Tests\TestCase;
 
 class RSACryptoServiceProviderTest extends TestCase
@@ -26,7 +26,7 @@ class RSACryptoServiceProviderTest extends TestCase
     {
         $keypair = $this->csp->generateKeyPair(static::$passphrase);
 
-        $this->assertInstanceOf(RSAParameters::class, $keypair);
+        $this->assertInstanceOf(RSAParametersInterface::class, $keypair);
     }
 
     /**

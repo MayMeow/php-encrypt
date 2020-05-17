@@ -22,7 +22,7 @@ use MayMeow\Model\AltNames;
 use MayMeow\Model\DomainName;
 use MayMeow\Model\KeyPairInterface;
 use MayMeow\Model\SignedCertificate;
-use MayMeow\RSA\RSACryptoServiceProvider;
+use MayMeow\Cryptography\RSA\RSACryptoServiceProvider;
 use Symfony\Component\Yaml\Yaml;
 use MayMeow\Model\KeyPair;
 use MayMeow\Model\EncryptConfiguration;

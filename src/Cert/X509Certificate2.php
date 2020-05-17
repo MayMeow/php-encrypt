@@ -2,10 +2,10 @@
 
 namespace MayMeow\Cert;
 
-use MayMeow\Model\DomainName;
+use MayMeow\Cryptography\Cert\CertParameters;
 use MayMeow\Model\KeyPair;
 use MayMeow\Model\KeyPairInterface;
-use MayMeow\RSA\RSACryptoServiceProvider;
+use MayMeow\Cryptography\RSA\RSACryptoServiceProvider;
 
 class X509Certificate2
 {
@@ -28,7 +28,7 @@ class X509Certificate2
 
     protected $encryptionPass;
 
-    public function __construct(DomainName $dn, array $configArgs)
+    public function __construct(CertParameters $dn = null, array $configArgs = null)
     {
         $this->encryptionPass = rand(100000, 999999);
         $this->_getRsa();

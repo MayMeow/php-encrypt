@@ -1,7 +1,6 @@
 <?php
 
-
-namespace MayMeow\RSA;
+namespace MayMeow\Cryptography\RSA;
 
 
 interface RSAParametersInterface
