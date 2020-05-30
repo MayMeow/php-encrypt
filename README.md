@@ -143,9 +143,9 @@ $keypair->getPublicKey();
 
 ### Loaders 
 
-Loaders are new feature that can be used to load Key pair `from v2018.5`. Each loader implements LoaderInterfaace. To use them follow example below. If you have protected (encrypted) private key **loaders are place where is decrypting based on passphrase**. **SecurityFactory using only decrpted private_keys**.
+Loaders are new feature that can be used to load Key pair `from v2018.5` updated in `2020.6`. Each loader implements LoaderInterfaace. To use them follow example below. If you have protected (encrypted) private key **loaders are place where is decrypting based on passphrase**. **SecurityFactory using only decrpted private_keys**.
 
-`v2020.5` will change using loaders. No more is required to use passphrase when you load certificate from file
+`v2020.6` will change using loaders. No more is required to use passphrase when you load certificate from file
 
 ```php
 use MayMeow\Loaders\FileLoader;
@@ -155,78 +155,9 @@ $kp->getPublicKey();
 $kp->getPrivateKey();
 ```
 
-Following are **Deprecated** because Security factory is going to be removed in `2021.*`.
+## RSA Crypto Service Provider
 
-```php
-// use CertificateFactory and generated keys
-$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys);
-
-$kl = new \MayMeow\Loaders\KeyPairLoader($cf, $keys, 'pa$$phras3'); // when you have encrypted priv_key
-
-$kl->getPublicKey() // return string with public key
-$kl->getPrivateKey() // return string with private key
-```
-
-When you have certificate or keypair generated to file you can use File loader
-
-```php
-$kl = new \MayMeow\Loaders\KeyPairFileLoader($cf, 'keys-2');
-
-$kl = new \MayMeow\Loaders\KeyPairFileLoader($cf, 'pa$$phras3'); // when you have encrypted priv_key
-
-$kl->getPublicKey() // return string with public key
-$kl->getPrivateKey() // return string with private key
-```
-
-## Security factory **DEPRECATED** Will be replaced by RSACryptoServiceProvider in `2021.*`
-
-Security factory can be used for encryptig and decripting strings.
-
-1. Initialize security factory
-
-```php
-$sf = new \MayMeow\Factory\SecurityFactory($cf);
-```
-
-2. Set string which you want to encrypt
-
-```php
-$string = json_encode([
-    "name" => 'Hello',
-    "surname" => 'world'
-]);
-$sf->setString($string);
-```
-
-3. load keys that will be used to encrypt / decrypt
-
-```php
-$sf->setPrivateKey('keys-2', null);
-$sf->setPublicKey('keys-2');
-```
-
-or you can use loaders to set keypairs
-
-```php
-$sf->setKeyPair(new KeyPairFileLoader('keys-2'));
-```
-
-5. Encrypt text
-
-```php
-$enc = base64_encode($sf->publicEncrypt());
-```
-
-6. Decrypt
-
-```php
-$sf->setString(base64_decode($enc));
-$decrypted = base64_encode($sf->privateDecrypt());
-```
-
-## RSA Crypto Security Provider
-
-RSACSP will replace Security factory. It can be used to generate keypairs and for asymetric encryption.
+RSACSP is replace Security factory. It's used for asymetric encryption. Asymetric encryption is using two keys, public for encrypt and private key for decrypt data;
 
 ```php
 // Generate keypPairs
@@ -248,7 +179,31 @@ $this->csp->verify($plainText, $signature); // true or false
 $this->csp->getFingerPrint();
 ```
 
-Example above will encrypt text with public key and decrypt with private. If you want encrypt with private just use `$sf->encrypt()` and `$sf->decrypt` for decrypting.
+## AES Crypto Service Provider
+
+AESCSP is using for aes encryption. Aes is symetric encryption, is using only one key for encrypt/decrypt data. For more security it can be used together with asymetric encryption.
+
+```php
+use MayMeow\Cryptography\AES\AESCryptoServiceProvider;
+
+//initialize CSP, generate key and IV
+$csp = new AESCryptoServiceProvider();
+$csp->generateIV();
+$key = $csp->generateKey();
+
+//encrypt data
+$plainText = "This is going to be encrypted!";
+$encryptedText = $this->csp->encrypt($plainText);
+
+// inistialize another CSP
+// sure you can use same instance to decrypt but in most cases you only ancrypting
+// and then storing to database to decrypt it later
+$csp2 = new AESCryptoServiceProvider();
+$csp2->setKey($key); // et key you generated before
+
+//decrypt text
+$originalText = $csp2->decrypt($encryptedText);
+```
 
 ## Contributing
 
