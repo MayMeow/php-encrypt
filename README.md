@@ -219,7 +219,7 @@ SEE changelog
 
 ## Credits
 
-* [Emma "MayMeow" Watson](https://github.com/MayMeow)
+* [MayMeow (Emma)](https://github.com/MayMeow)
 
 ## License
 
