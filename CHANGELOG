@@ -1,20 +1,21 @@
-v 2020.5 (Unreleased - in progress)
+v 2020.6
 
-Added X509Certificate2 and RSACryptoService provider
+NEW Add support for creating symmetric ciphers with AES GCM
 
-* Add X509Certificate2 using to create and signing certificates
+* Add `X509Certificate2` using to create and signing certificates
+* Add `AESCryptoServiceProvider` with AES GCM support is replacing SecurityFactory
 * Writers can be used to create classes to export certificates to filesystem or database...
-* FileWriter
+* FileWriter to save new certificates to filesystem. You can add more when implementing WriterInterfaces
 
+Following ist of deprecations. These functions will be removed in 2021.* releases
 
-Deprecations
-
-* SignedCertificate is deprecated use X509Certificate2 instead
-* Constants CertificateFactory::TYPE_INTERMEDIATE, TYPE_CODE_SIGN, TYPE_CERTIFICATION_AUTHORITY, TYPE_SERVER, TYPE_USER
-are deprecated. Use X509Certificate2 constants instead.
-* CertificateFactory::_setDataPath deprecated and will be removed
-* CertificateFactory::_setTemplatesPath and CertificateFactory::setTemplatesPath templates are note configured with CertificateFactory::_setCertConfigure
-* CertificateFactory::setDataPath was not used
+* `SignedCertificate` is deprecated use `X509Certificate2` instead
+* Constants `CertificateFactory::TYPE_INTERMEDIATE`, `TYPE_CODE_SIGN`, `TYPE_CERTIFICATION_AUTHORITY`, `TYPE_SERVER`, `TYPE_USER`
+are deprecated. Use `X509Certificate2` constants instead.
+* `SecurityFactory`. use `AESCryptoServiceProvider`
+* `CertificateFactory::_setDataPath`
+* `CertificateFactory::_setTemplatesPath` and `CertificateFactory::setTemplatesPath` templates are now configured with `CertificateFactory::_setCertConfigure`
+* `CertificateFactory::setDataPath` was not used
 * setConfigPath
 * _getConfig
 * _setConfig
