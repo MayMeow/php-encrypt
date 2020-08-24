@@ -1,4 +1,4 @@
-image: registry.gitcity.eu/gitcity-sk/gitcity-build-images:php-7.1-fpm-redis-phpunit-6.5.6
+image: docker.pkg.hsoww.net/dev-community/php-ci-cd:latest
 
 # Tags
 .run-on-do-docker: &run-on-do-docker
