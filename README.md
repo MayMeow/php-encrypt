@@ -17,6 +17,14 @@ And intialize it withhin your script
 $cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 ```
 
+### Alternative you can download from my private server
+
+add to your composer.json files to repositories section
+
+```json
+{"type":"composer","url":"https://git.cloud.hsoww.net/api/v4/group/121/-/packages/composer/packages.json"}
+```
+
 ## Usage [WIP]
 
 ### Path Configuring
