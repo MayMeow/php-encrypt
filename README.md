@@ -3,6 +3,8 @@
 Library for signing certificates with selfsigned CA
 
 ![](https://github.com/maymeow/php-encrypt/workflows/PHP%20Composer/badge.svg)
+[![pipeline status](https://git.cloud.hsoww.net/maymeowhq/personal/php-encrypt/badges/master/pipeline.svg)](https://git.cloud.hsoww.net/maymeowhq/personal/php-encrypt/-/commits/master)
+[![coverage report](https://git.cloud.hsoww.net/maymeowhq/personal/php-encrypt/badges/master/coverage.svg)](https://git.cloud.hsoww.net/maymeowhq/personal/php-encrypt/-/commits/master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/6b389f3bda3f42dd467a/maintainability)](https://codeclimate.com/github/MayMeow/php-encrypt/maintainability)
 
 ## Installation
