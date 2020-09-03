@@ -1,10 +1,12 @@
-image: docker.pkg.hsoww.net/dev-community/php-ci-cd:latest
+stages:
+  - 🧪 test
+  - 🚀 deploy
 
 # Tags
 .run-on-do-docker: &run-on-do-docker
-    tags:
-        - digitalocean
-        - docker
+  tags:
+    - digitalocean
+    - docker
 
 .before-script: &before-script
   before_script:
@@ -13,8 +15,18 @@ image: docker.pkg.hsoww.net/dev-community/php-ci-cd:latest
     - composer install --no-ansi --no-interaction --no-progress --no-scripts
 
 phpunit test:
+  image: docker.pkg.hsoww.net/dev-community/php-ci-cd:latest
   <<: *run-on-do-docker
   <<: *before-script
-  stage: test
+  stage: 🧪 test
   script:
     - phpunit --coverage-text --colors=never
+
+deploy:
+  <<: *run-on-do-docker
+  image: alpine
+  stage: 🚀 deploy
+  only:
+    - tags
+  script:
+    - 'curl --header "Job-Token: $CI_JOB_TOKEN" --data tag=$CI_COMMIT_REF_NAME "https://gitlab.example.com/api/v4/projects/$CI_PROJECT_ID/packages/composer"'
