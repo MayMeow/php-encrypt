@@ -2,111 +2,173 @@
 
 namespace MayMeow\Cryptography\Cert;
 
-class CertParameters
+/**
+ * Class CertParameters
+ * @package MayMeow\Cryptography\Cert
+ */
+class CertParameters implements SerializableInterface
 {
-    /*private $countryName;
-       private $stateOrProvinceName;
-       private $localityName;
-       private $organizationName;
-       private $organizationalUnitName;
-       private $commonName;
-       private $emailAddress;*/
+    private string $countryName;
+    private string $stateOrProvinceName;
+    private string $localityName;
+    private string $organizationName;
+    private string $organizationalUnitName;
+    private string $commonName;
+    private string $emailAddress;
 
     /**
-     * @var array
+     * @return string
      */
-    protected $config = [];
+    public function getCountryName(): string
+    {
+        return $this->countryName;
+    }
 
     /**
-     * @param mixed $countryName
+     * @param string $countryName
      * @return CertParameters
      */
-    public function setCountryName($countryName)
+    public function setCountryName(string $countryName): CertParameters
     {
-        $this->config['countryName'] = $countryName;
-
+        $this->countryName = $countryName;
         return $this;
     }
 
     /**
-     * @param mixed $stateOrProvinceName
+     * @return string
+     */
+    public function getStateOrProvinceName(): string
+    {
+        return $this->stateOrProvinceName;
+    }
+
+    /**
+     * @param string $stateOrProvinceName
      * @return CertParameters
      */
-    public function setStateOrProvinceName($stateOrProvinceName)
+    public function setStateOrProvinceName(string $stateOrProvinceName): CertParameters
     {
-        $this->config['stateOrProvinceName'] = $stateOrProvinceName;
-        //$this->stateOrProvinceName = $stateOrProvinceName;
-
+        $this->stateOrProvinceName = $stateOrProvinceName;
         return $this;
     }
 
     /**
-     * @param mixed $localityName
+     * @return string
+     */
+    public function getLocalityName(): string
+    {
+        return $this->localityName;
+    }
+
+    /**
+     * @param string $localityName
      * @return CertParameters
      */
-    public function setLocalityName($localityName)
+    public function setLocalityName(string $localityName): CertParameters
     {
-        $this->config['localityName'] = $localityName;
-        //$this->localityName = $localityName;
-
+        $this->localityName = $localityName;
         return $this;
     }
 
     /**
-     * @param mixed $organizationName
+     * @return string
+     */
+    public function getOrganizationName(): string
+    {
+        return $this->organizationName;
+    }
+
+    /**
+     * @param string $organizationName
      * @return CertParameters
      */
-    public function setOrganizationName($organizationName)
+    public function setOrganizationName(string $organizationName): CertParameters
     {
-        //$this->organizationName = $organizationName;
-        $this->config['organizationName'] = $organizationName;
+        $this->organizationName = $organizationName;
         return $this;
     }
 
     /**
-     * @param mixed $organizationalUnitName
+     * @return string
+     */
+    public function getOrganizationalUnitName(): string
+    {
+        return $this->organizationalUnitName;
+    }
+
+    /**
+     * @param string $organizationalUnitName
      * @return CertParameters
      */
-    public function setOrganizationalUnitName($organizationalUnitName)
+    public function setOrganizationalUnitName(string $organizationalUnitName): CertParameters
     {
-        $this->config['organizationalUnitName'] = $organizationalUnitName;
-        //$this->organizationalUnitName = $organizationalUnitName;
-
+        $this->organizationalUnitName = $organizationalUnitName;
         return $this;
     }
 
     /**
-     * @param mixed $commonName
+     * @return string
+     */
+    public function getCommonName(): string
+    {
+        return $this->commonName;
+    }
+
+    /**
+     * @param string $commonName
      * @return CertParameters
      */
-    public function setCommonName($commonName)
+    public function setCommonName(string $commonName): CertParameters
     {
-        $this->config['commonName'] = $commonName;
-        //$this->commonName = $commonName;
-
+        $this->commonName = $commonName;
         return $this;
     }
 
     /**
-     * @param mixed $emailAddress
+     * @return string
+     */
+    public function getEmailAddress(): string
+    {
+        return $this->emailAddress;
+    }
+
+    /**
+     * @param string $emailAddress
      * @return CertParameters
      */
-    public function setEmailAddress($emailAddress)
+    public function setEmailAddress(string $emailAddress): CertParameters
     {
-        $this->config['emailAddress'] = $emailAddress;
-        //$this->emailAddress = $emailAddress;
-
+        $this->emailAddress = $emailAddress;
         return $this;
     }
 
-    public function serialize() {
-        //$properties = get_object_vars($this);
-
-        return json_encode($this->config);
+    public function serialize()
+    {
+        return json_encode($this->toArray());
     }
 
-    public function get()
+    /**
+     * @return array
+     */
+    public function toArray(): array
     {
-        return $this->config;
+        $vars = get_object_vars($this);
+
+        $arr = [];
+
+        foreach ($vars as $k => $v) {
+            $arr[$k] = $v;
+        }
+
+        return $arr;
+    }
+
+    /**
+     * @return array
+     * @deprecated
+     */
+    public function get() : array
+    {
+        return $this->toArray();
     }
 }
