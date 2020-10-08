@@ -66,6 +66,9 @@ class KeyPairLoader implements KeyPairLoaderInterface
 
     /**
      * Parse information about private key from given string
+     *
+     * @param $privKeyInfo
+     * @return false|resource
      */
     protected function _parsePrivateKeyFromInfo($privKeyInfo)
     {
