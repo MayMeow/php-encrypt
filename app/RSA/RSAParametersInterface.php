@@ -19,9 +19,9 @@ interface RSAParametersInterface
 
     /**
      * Check if private key is encrypted
-     * @return mixed
+     * @return bool
      */
-    public function isPrivateKeyEncrypted();
+    public function isPrivateKeyEncrypted() : bool;
 
     /**
      * Decrypt private key
