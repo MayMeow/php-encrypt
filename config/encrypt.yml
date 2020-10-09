@@ -9,7 +9,7 @@ certificates:
     daysvalid: 365
     x509_extensions: usr_cert
   server:
-    daysvalid: 1825
+    daysvalid: 365
     x509_extensions: server_cert
   code_sign:
     daysvalid: 365

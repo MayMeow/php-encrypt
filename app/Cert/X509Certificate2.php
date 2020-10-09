@@ -13,8 +13,7 @@ class X509Certificate2
     const TYPE_CODE_SIGN = 'code_sign';
     const TYPE_INTERMEDIATE = 'intermediate';
 
-    /** @var RSACryptoServiceProvider */
-    protected $rsa;
+    protected RSACryptoServiceProvider $rsa;
 
     /** @var $csr */
     protected $csr;
@@ -36,9 +35,7 @@ class X509Certificate2
 
     protected function _getRsa()
     {
-        if ($this->rsa == null) {
-            $this->rsa = new RSACryptoServiceProvider();
-        }
+        $this->rsa = new RSACryptoServiceProvider();
 
         return $this->rsa;
     }
