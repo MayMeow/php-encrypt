@@ -1,3 +1,11 @@
+v 2020.10 (unreleased)
+
+* `MayMeow\Cryptography\Cert\CertParameters` now storing data into object vars instead arrays and implementing `SerializableInterface`
+* `MayMeow\Loaders\FileLoader` is now deprecated and using `MayMeow\Cryptography\Filesystem\RsaParametersFileLoader` to load and return KeyPairs
+* `MayMeow\Model\KeyPair` is duplicate of `MayMeow\Cryptography\RSA\RSAParameters` and is now deprecated.
+
+All deprecated Classes will be removed in version **2121.1** which will be released somewhere in January.
+
 v 2020.6
 
 NEW Add support for creating symmetric ciphers with AES GCM

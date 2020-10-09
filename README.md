@@ -45,7 +45,7 @@ To chanage folder to change path to your configuration file
 $cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration('/path/to/templates/folder/my_config_file.yml'));
 ```
 
-### Certificate Signing
+### Certificate Signing - [DEPRECATED]
 
 1. Create Selfsigned CA
 
@@ -152,11 +152,9 @@ $keypair->getPrivateKey();
 $keypair->getPublicKey();
 ```
 
-### Loaders 
+### Loaders [DEPRECATED]
 
-Loaders are new feature that can be used to load Key pair `from v2018.5` updated in `2020.6`. Each loader implements LoaderInterfaace. To use them follow example below. If you have protected (encrypted) private key **loaders are place where is decrypting based on passphrase**. **SecurityFactory using only decrpted private_keys**.
-
-`v2020.6` will change using loaders. No more is required to use passphrase when you load certificate from file
+Are now deprecated and will be removed in nex major release
 
 ```php
 use MayMeow\Loaders\FileLoader;
@@ -166,7 +164,9 @@ $kp->getPublicKey();
 $kp->getPrivateKey();
 ```
 
-## RSA Crypto Service Provider
+## Crypto Service Providers
+
+### RSA Crypto Service Provider
 
 RSACSP is replace Security factory. It's used for asymetric encryption. Asymetric encryption is using two keys, public for encrypt and private key for decrypt data;
 
@@ -190,7 +190,7 @@ $this->csp->verify($plainText, $signature); // true or false
 $this->csp->getFingerPrint();
 ```
 
-## AES Crypto Service Provider
+### AES Crypto Service Provider
 
 AESCSP is using for aes encryption. Aes is symetric encryption, is using only one key for encrypt/decrypt data. For more security it can be used together with asymetric encryption.
 
