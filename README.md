@@ -172,10 +172,17 @@ RSACSP is replace Security factory. It's used for asymetric encryption. Asymetri
 
 ```php
 // Generate keypPairs
-use MayMeow\RSA\RSACryptoServiceProvider;
+use MayMeow\Cryptography\RSA\RSACryptoServiceProvider;
+use MayMeow\Cryptography\Filesystem\RsaParametersFileLoader;
 
 $this->csp = new RSACryptoServiceProvider();
-$keypair = $this->csp->generateKeyPair('yourSuperStrongPas$$phrase'); // returns RSAParameters
+
+// generate new keypairs
+$keypair = $this->csp->generateKeyPair('yourSuperStrongPas$$phrase'); // returns RSAParameter
+
+// OR Load keypairs from file
+$fileLoader = new RsaParametersFileLoader();
+$this->csp->setRsaParameters($fileLoader->load('name_of_certificate'));
 
 // Ecrypt and decrypt
 $plainText = 'Hello World!';
