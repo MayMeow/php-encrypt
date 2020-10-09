@@ -31,6 +31,7 @@ use Symfony\Component\Yaml\Yaml;
  * Class EncryptConfiguration
  * @package MayMeow\Model
  * @deprecated Use DefaultCertificateAuthorityConfiguration
+ * @see \MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface
  */
 class EncryptConfiguration
 {
@@ -43,6 +44,11 @@ class EncryptConfiguration
     public function __construct($path = null)
     {
         $this->cfg = DefaultCertificateAuthorityConfiguration::getInstance($path);
+    }
+
+    public function defaultConfiguration() : CertificateAuthorityConfigurationInterface
+    {
+        return  $this->cfg;
     }
 
     /**

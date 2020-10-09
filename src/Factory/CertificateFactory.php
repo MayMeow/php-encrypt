@@ -16,7 +16,7 @@
 
 namespace MayMeow\Factory;
 
-use MayMeow\Cert\X509Certificate2;
+use MayMeow\Cryptography\Cert\X509Certificate2;
 use MayMeow\Interfaces\WriterInterface;
 use MayMeow\Model\AltNames;
 use MayMeow\Model\DomainName;
@@ -274,22 +274,22 @@ class CertificateFactory implements CertificateFactoryInterface
         $configPath = '';
         switch ($this->type) {
             case X509Certificate2::TYPE_CA:
-                $configPath = $this->_config->getCaTemplate($this->templateRootPath);
+                $configPath = $this->_config->defaultConfiguration()->getCaCertificateTemplate();
                 break;
             case X509Certificate2::TYPE_INTERMEDIATE:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                $configPath = $this->_config->defaultConfiguration()->getIntermediateCaCertificateTemplate();
                 break;
             case X509Certificate2::TYPE_USER:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                $configPath = $this->_config->defaultConfiguration()->getUserCertificateTemplate();
                 break;
             case X509Certificate2::TYPE_SERVER:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                $configPath = $this->_config->defaultConfiguration()->getServerCertificateTemplate();
                 break;
             case X509Certificate2::TYPE_CODE_SIGN:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                $configPath = $this->_config->defaultConfiguration()->getCodeSigningCertificateTemplate();
                 break;
             default:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
+                $configPath = $this->_config->defaultConfiguration()->getIntermediateCaCertificateTemplate();
                 break;
         }
 

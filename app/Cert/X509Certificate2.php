@@ -3,8 +3,7 @@
 namespace MayMeow\Cryptography\Cert;
 
 use MayMeow\Cryptography\RSA\RSACryptoServiceProvider;
-use MayMeow\Model\KeyPair;
-use MayMeow\Model\KeyPairInterface;
+use MayMeow\Cryptography\RSA\RSAParameters;
 
 class X509Certificate2
 {
@@ -20,8 +19,7 @@ class X509Certificate2
     /** @var $csr */
     protected $csr;
 
-    /** @var KeyPairInterface */
-    protected $privateKey;
+    protected RSAParameters $privateKey;
 
     protected $signedCert;
 
@@ -54,15 +52,6 @@ class X509Certificate2
     }
 
     /**
-     * @return \MayMeow\Cert\X509Certificate2
-     */
-    public function setPrivateKey($privateKey): X509Certificate2
-    {
-        $this->privateKey->setPrivateKey($privateKey);
-        return $this;
-    }
-
-    /**
      * @return mixed
      */
     public function getSignedCert()
@@ -87,16 +76,6 @@ class X509Certificate2
     public function getEncryptionPass()
     {
         return $this->encryptionPass;
-    }
-
-    /**
-     * @param $encryptionPass
-     * @return $this
-     */
-    public function setEncryptionPass($encryptionPass)
-    {
-        $this->encryptionPass = $encryptionPass;
-        return $this;
     }
 
     /**

@@ -20,13 +20,14 @@ class DefaultCertificateAuthorityConfiguration implements CertificateAuthorityCo
      */
     protected array $config = [
         'ca' => 'ca_certificate.cnf',
-        'intermediate' => 'intermediate_certificate.cnf'
+        'user' => 'intermediate_certificate.cnf',
+        'server' => 'intermediate_certificate.cnf',
+        'code_sign' => 'intermediate_certificate.cnf',
+        'intermediate' => 'intermediate_certificate.cnf',
     ];
 
     private function __construct(?string $path = null)
     {
-        $this->_buildPaths();
-
         $configFilePath = '';
 
         if ($path == null) {
@@ -62,7 +63,7 @@ class DefaultCertificateAuthorityConfiguration implements CertificateAuthorityCo
      */
     public function getCaCertificateTemplate(): string
     {
-        return $this->caCertificateTemplatePath;
+        return $this->_buildPath('ca');
     }
 
     /**
@@ -72,13 +73,14 @@ class DefaultCertificateAuthorityConfiguration implements CertificateAuthorityCo
      */
     public function getIntermediateCaCertificateTemplate(): string
     {
-        return $this->intermediateCaTemplateTemplatePath;
+        return $this->_buildPath('intermediate');
     }
 
     /**
-     * Create template paths
+     * @param string $type
+     * @return string
      */
-    private function _buildPaths() : void
+    private function _buildPath(string $type) : string
     {
         if (array_key_exists('template_root_path', $this->config)) {
             $templateRoot = $this->config['template_root_path'];
@@ -86,7 +88,30 @@ class DefaultCertificateAuthorityConfiguration implements CertificateAuthorityCo
             $templateRoot = TEMPLATE_ROOT;
         }
 
-        $this->intermediateCaTemplateTemplatePath = $templateRoot . $this->config['intermediate'];
-        $this->caCertificateTemplatePath = $templateRoot . $this->config['ca'];
+        return $templateRoot . $this->config[$type];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUserCertificateTemplate(): string
+    {
+        return $this->_buildPath('user');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getServerCertificateTemplate(): string
+    {
+        return $this->_buildPath('server');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCodeSigningCertificateTemplate(): string
+    {
+        return $this->_buildPath('code_sign');
     }
 }
