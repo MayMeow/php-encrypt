@@ -27,15 +27,13 @@ class X509Certificate2
 
     protected $encryptionPass;
 
-    public function __construct(CertParameters $dn = null, array $configArgs = null)
+    public function __construct(CertParameters $certParameters = null, array $configArgs = null)
     {
         $this->encryptionPass = rand(100000, 999999);
-        $this->_getRsa();
-        $this->privateKey = KeyPair::initialize();
-        $this->privateKey->setPrivateKey($this->rsa->generateKeyPair()->getPrivateKey());
+        $this->privateKey = $this->_getRsa()->generateKeyPair();
 
         $privKey = $this->privateKey->getPrivateKey();
-        $this->csr = openssl_csr_new($dn->get(), $privKey, $configArgs);
+        $this->csr = openssl_csr_new($certParameters->toArray(), $privKey, $configArgs);
     }
 
     protected function _getRsa()

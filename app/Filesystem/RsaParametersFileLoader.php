@@ -4,6 +4,7 @@ namespace MayMeow\Cryptography\Filesystem;
 
 use MayMeow\Cryptography\RSA\RSAParameters;
 use MayMeow\Cryptography\RSA\RSAParametersInterface;
+use MayMeow\Cryptography\RSA\RsaParametersLoaderInterface;
 
 /**
  * Class RsaParametersFileLoader
@@ -12,7 +13,7 @@ use MayMeow\Cryptography\RSA\RSAParametersInterface;
  *
  * @package MayMeow\Cryptography\Filesystem
  */
-class RsaParametersFileLoader implements FileLoaderInterface
+class RsaParametersFileLoader implements FileLoaderInterface, RsaParametersLoaderInterface
 {
     private string $certificateStoragePath;
 
