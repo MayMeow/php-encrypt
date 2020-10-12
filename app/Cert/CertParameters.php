@@ -167,7 +167,7 @@ class CertParameters implements SerializableInterface
      * @return array
      * @deprecated
      */
-    public function get() : array
+    public function get(): array
     {
         return $this->toArray();
     }

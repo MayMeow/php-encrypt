@@ -57,9 +57,9 @@ class X509Certificate2
     }
 
     /**
-     * @deprecated
      * @param $signedCert
      * @return $this
+     * @deprecated
      */
     public function setSignedCert($signedCert)
     {

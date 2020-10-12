@@ -47,7 +47,7 @@ class RsaParametersFileLoader implements FileLoaderInterface, RsaParametersLoade
      * @param string $name
      * @return RSAParameters
      */
-    private function _initialize(string $name) : RSAParameters
+    private function _initialize(string $name): RSAParameters
     {
         // Load public key
         $pub = file_get_contents($this->certificateStoragePath . $name . DS . 'cert.crt');
@@ -62,6 +62,6 @@ class RsaParametersFileLoader implements FileLoaderInterface, RsaParametersLoade
             $passPhrase = file_get_contents($passPhrasePath);
         }
 
-        return new RSAParameters($priv,$pub, $passPhrase);
+        return new RSAParameters($priv, $pub, $passPhrase);
     }
 }

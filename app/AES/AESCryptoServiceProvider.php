@@ -30,7 +30,7 @@ class AESCryptoServiceProvider
      * @param $iv
      * @return AESCryptoServiceProvider
      */
-    public function setIV($iv) : AESCryptoServiceProvider
+    public function setIV($iv): AESCryptoServiceProvider
     {
         $this->iv = $iv;
 
@@ -41,7 +41,7 @@ class AESCryptoServiceProvider
      * @param $key
      * @return AESCryptoServiceProvider
      */
-    public function setKey($key) : AESCryptoServiceProvider
+    public function setKey($key): AESCryptoServiceProvider
     {
         $this->key = $key;
 
@@ -82,7 +82,7 @@ class AESCryptoServiceProvider
      * @param string $plainText
      * @return string
      */
-    public function encrypt(string $plainText) :string
+    public function encrypt(string $plainText): string
     {
         $encryptedBytes = openssl_encrypt($plainText, $this->cipher, $this->key, OPENSSL_RAW_DATA, $this->iv, $this->tag, $this->aad);
 
@@ -94,7 +94,7 @@ class AESCryptoServiceProvider
      * @param string $encryptedData
      * @return string
      */
-    public function decrypt(string $encryptedData) : string
+    public function decrypt(string $encryptedData): string
     {
         $c = base64_decode($encryptedData);
 

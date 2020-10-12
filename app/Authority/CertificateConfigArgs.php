@@ -39,7 +39,14 @@ class CertificateConfigArgs
         return new static($authorityConfiguration);
     }
 
-    public function getArgs(string $certificateType) : array
+    /**
+     * @param string $certificateType
+     * @return array
+     *
+     * TODO Add Alternative names and if they are not null create alternative configuration in forlder,
+     * where certificate will be created
+     */
+    public function getArgs(string $certificateType): array
     {
         $this->_buildArgs($certificateType);
 
@@ -47,22 +54,9 @@ class CertificateConfigArgs
     }
 
     /**
-     * @return array
-     */
-    public function toArray(): array
-    {
-        $configArgs = [];
-        foreach (get_object_vars($this) as $k => $v) {
-            $configArgs[$k] = $v;
-        }
-
-        return $configArgs;
-    }
-
-    /**
      * @param string $certificateType
      */
-    private function _buildArgs(string $certificateType) : void
+    private function _buildArgs(string $certificateType): void
     {
         if ($certificateType == X509Certificate2::TYPE_CA) {
             $this->config = $this->authorityConfiguration->getCaCertificateTemplate();
@@ -78,5 +72,18 @@ class CertificateConfigArgs
 
         $this->x509_extensions = $this->authorityConfiguration->getConfiguration()['certificates'][$certificateType]['x509_extensions'];
         $this->private_key_bits = $this->authorityConfiguration->getConfiguration()['default']['private_key_bits'];
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $configArgs = [];
+        foreach (get_object_vars($this) as $k => $v) {
+            $configArgs[$k] = $v;
+        }
+
+        return $configArgs;
     }
 }

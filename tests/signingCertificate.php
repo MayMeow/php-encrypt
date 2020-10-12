@@ -97,4 +97,4 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
 
 $t = new TestCA();
 
-$t->test();
+$t->testSelfSigned();
