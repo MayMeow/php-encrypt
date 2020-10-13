@@ -62,6 +62,7 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
         $cArgs = \MayMeow\Cryptography\Authority\CertificateConfigArgs::getInstance($this);
 
         // Intialialize new certificate
+        // add to certificate authority sign(CertParameters $csr, string $type, ?AlternativeNames $altNames = null)
         $cert = new \MayMeow\Cryptography\Cert\X509Certificate2($csr, $cArgs->getArgs('user'));
 
         // Create Self Signed certificate
@@ -89,6 +90,37 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
             $cArgs->getArgs('user'));
     }
 
+    public function testWighCA()
+    {
+        // Add certificate informations
+        $csr = new \MayMeow\Cryptography\Cert\CertParameters();
+        $csr->setCommonName('EmmaX');
+        $csr->setEmailAddress('emma@themaymeow.com');
+        $csr->setOrganizationName('The MayMeow .Ltd');
+
+        $ca = new \MayMeow\Cryptography\Authority\CertificateAuthority();
+
+        $certificate = $ca->createSelfSigned($csr, 'user', 7000);
+
+        $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;
+
+        if (!file_exists($path)) {
+            mkdir($path);
+        }
+
+        // Write Certificaate to file
+        openssl_x509_export_to_file($certificate->getSignedCert(), $path . 'cert.crt');
+
+        // Write primaary key to file
+        openssl_pkey_export_to_file($certificate->getPrivateKey(),
+            $path . 'key.pem', $certificate->getEncryptionPass(), $certificate->getConfigArgs());
+
+        // Write PCKS12
+        openssl_pkcs12_export_to_file($certificate->getSignedCert(),
+            $path . 'cert.pfx', $certificate->getPrivateKey(), $certificate->getEncryptionPass(),
+            $certificate->getConfigArgs());
+    }
+
     public function getDefaultConfiguration(): \MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface
     {
         return $this->conf;
@@ -97,4 +129,4 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
 
 $t = new TestCA();
 
-$t->testSelfSigned();
+$t->testWighCA();
