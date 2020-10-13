@@ -17,10 +17,10 @@ class FileWriter implements WriterInterface
     protected $certConfiguration;
 
     /**
-     * @param mixed $cert
+     * @param \MayMeow\Cert\X509Certificate2|\MayMeow\Cryptography\Cert\X509Certificate2 $cert
      * @return FileWriter
      */
-    public function setCert(X509Certificate2 $cert)
+    public function setCert($cert)
     {
         $this->cert = $cert;
         return $this;

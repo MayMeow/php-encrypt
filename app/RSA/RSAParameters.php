@@ -30,7 +30,10 @@ class RSAParameters implements RSAParametersInterface
         }
     }
 
-    public function isPrivateKeyEncrypted()
+    /**
+     * @return bool
+     */
+    public function isPrivateKeyEncrypted() : bool
     {
         if ($this->passphrase != null) {
             return true;

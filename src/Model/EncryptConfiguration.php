@@ -23,11 +23,19 @@
 
 namespace MayMeow\Model;
 
+use MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface;
+use MayMeow\Cryptography\Authority\DefaultCertificateAuthorityConfiguration;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * Class EncryptConfiguration
+ * @package MayMeow\Model
+ * @deprecated Use DefaultCertificateAuthorityConfiguration
+ * @see \MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface
+ */
 class EncryptConfiguration
 {
-    protected $configFile;
+    protected CertificateAuthorityConfigurationInterface $cfg;
 
     /**
      * EncryptConfiguration constructor
@@ -35,34 +43,28 @@ class EncryptConfiguration
      */
     public function __construct($path = null)
     {
-        if (null == $path) {
-            $this->configFile = file_get_contents(CONFIG . 'encrypt.yml');
-        } else {
-            $this->configFile = file_get_contents($path);
-        }
+        $this->cfg = DefaultCertificateAuthorityConfiguration::getInstance($path);
+    }
+
+    public function defaultConfiguration() : CertificateAuthorityConfigurationInterface
+    {
+        return  $this->cfg;
     }
 
     /**
      * Parse configuration file
+     * @deprecated it can be called in constructor of Encrypt configuration
      */
     public function parse()
     {
-        return Yaml::parse($this->configFile);
-    }
-
-    /**
-     * @deprecated
-     * @return false|string
-     */
-    public function get()
-    {
-        return $this->configFile;
+        return $this->cfg->getConfiguration();
     }
 
     /**
      * @param $templateName
      * @param null $templateRoot
      * @return string
+     * @deprecated no more used
      */
     public function getTemplatePath($templateName, $templateRoot = null)
     {
@@ -77,11 +79,11 @@ class EncryptConfiguration
      */
     public function getCaTemplate($templateRoot = null)
     {
-        return $this->getTemplatePath('ca_certificate.cnf', $templateRoot);
+        return $this->cfg->getCaCertificateTemplate();
     }
 
     public function getIntermediateTemplate($templateRoot = null)
     {
-        return $this->getTemplatePath('intermediate_certificate.cnf', $templateRoot);
+        return $this->cfg->getIntermediateCaCertificateTemplate();
     }
 }

@@ -16,7 +16,11 @@
 
 namespace MayMeow\Factory;
 
-use MayMeow\Cert\X509Certificate2;
+use MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface;
+use MayMeow\Cryptography\Authority\CertificateAuthorityInterface;
+use MayMeow\Cryptography\Authority\CertificateConfigArgs;
+use MayMeow\Cryptography\Cert\X509Certificate2;
+use MayMeow\Cryptography\Cert\X509CertificateWriterInterface;
 use MayMeow\Interfaces\WriterInterface;
 use MayMeow\Model\AltNames;
 use MayMeow\Model\DomainName;
@@ -27,7 +31,11 @@ use Symfony\Component\Yaml\Yaml;
 use MayMeow\Model\KeyPair;
 use MayMeow\Model\EncryptConfiguration;
 
-class CertificateFactory implements CertificateFactoryInterface
+/**
+ * Class CertificateFactory
+ * @package MayMeow\Factory
+ */
+class CertificateFactory implements CertificateFactoryInterface, CertificateAuthorityInterface
 {
     /**
      * @deprecated
@@ -127,9 +135,9 @@ class CertificateFactory implements CertificateFactoryInterface
      * Certificate model
      * Here will be stored all required variables, keys, csr and certificate
      *
-     * @var SignedCertificate
+     * @var X509Certificate2
      */
-    protected $crt;
+    protected X509Certificate2 $crt;
 
     /**
      * Default template with certificate configurations
@@ -261,43 +269,9 @@ class CertificateFactory implements CertificateFactoryInterface
     public function setType($type, $options = null)
     {
         $this->type = $type;
-        $this->_setCertConfigure();
+        $this->certConfigure = CertificateConfigArgs::getInstance($this)->getArgs($this->type);
 
         return $this;
-    }
-
-    /**
-     * Load Default Configuration
-     */
-    protected function _setCertConfigure()
-    {
-        $configPath = '';
-        switch ($this->type) {
-            case X509Certificate2::TYPE_CA:
-                $configPath = $this->_config->getCaTemplate($this->templateRootPath);
-                break;
-            case X509Certificate2::TYPE_INTERMEDIATE:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
-                break;
-            case X509Certificate2::TYPE_USER:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
-                break;
-            case X509Certificate2::TYPE_SERVER:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
-                break;
-            case X509Certificate2::TYPE_CODE_SIGN:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
-                break;
-            default:
-                $configPath = $this->_config->getIntermediateTemplate($this->templateRootPath);
-                break;
-        }
-
-        $this->certConfigure = [
-            'config' => $configPath,
-            'x509_extensions' => $this->_getConfig('x509_extensions'),
-            'private_key_bits' => $this->config['default']['private_key_bits']
-        ];
     }
 
     /**
@@ -550,9 +524,11 @@ class CertificateFactory implements CertificateFactoryInterface
      * @return WriterInterface
      * @throws \Exception
      */
-    public function writeTo($writerInterfaceName)
+    public function writeTo($certificateWriter)
     {
-        $wi = new $writerInterfaceName();
+        //$certificateWriter->write($this->crt, $this->fileName);
+
+        $wi = new $certificateWriter();
 
         if ($wi instanceof WriterInterface) {
             $wi->setCert($this->crt);
@@ -596,5 +572,13 @@ class CertificateFactory implements CertificateFactoryInterface
     public function getPublicKey($caName = null)
     {
         return file_get_contents($this->caDataRoot . $caName . DS . static::PUB_KEY_FILENAME);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDefaultConfiguration(): CertificateAuthorityConfigurationInterface
+    {
+        return $this->_config->defaultConfiguration();
     }
 }

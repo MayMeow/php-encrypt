@@ -3,10 +3,13 @@
 namespace MayMeow\Cryptography\Cert;
 
 use MayMeow\Cryptography\RSA\RSACryptoServiceProvider;
-use MayMeow\Model\KeyPair;
-use MayMeow\Model\KeyPairInterface;
+use MayMeow\Cryptography\RSA\RSAParameters;
 
-class X509Certificate2
+/**
+ * Class X509Certificate2
+ * @package MayMeow\Cryptography\Cert
+ */
+class X509Certificate2 implements X509Certificate2Interface
 {
     const TYPE_CA = 'ca';
     const TYPE_USER = 'user';
@@ -14,37 +17,66 @@ class X509Certificate2
     const TYPE_CODE_SIGN = 'code_sign';
     const TYPE_INTERMEDIATE = 'intermediate';
 
-    /** @var RSACryptoServiceProvider */
-    protected $rsa;
+    protected RSACryptoServiceProvider $rsa;
 
     /** @var $csr */
     protected $csr;
 
-    /** @var KeyPairInterface */
-    protected $privateKey;
+    protected RSAParameters $rsaParameters;
 
     protected $signedCert;
 
     protected $encryptionPass;
 
-    public function __construct(CertParameters $dn = null, array $configArgs = null)
-    {
-        $this->encryptionPass = rand(100000, 999999);
-        $this->_getRsa();
-        $this->privateKey = KeyPair::initialize();
-        $this->privateKey->setPrivateKey($this->rsa->generateKeyPair()->getPrivateKey());
+    protected CertParameters $certParameters;
 
-        $privKey = $this->privateKey->getPrivateKey();
-        $this->csr = openssl_csr_new($dn->get(), $privKey, $configArgs);
+    /**
+     * @var array|null
+     */
+    protected ?array $configArgs;
+
+    /**
+     * X509Certificate2 constructor.
+     * @param CertParameters $certParameters
+     * @param array|null $configArgs
+     */
+    public function __construct(CertParameters $certParameters, array $configArgs = null)
+    {
+        $this->certParameters = $certParameters;
+        $this->encryptionPass = rand(100000, 999999);
+
+        $this->rsaParameters = $this->_getRsa()->generateKeyPair();
+        $privateKey = $this->rsaParameters->getPrivateKey();
+        $this->configArgs = $configArgs;
+
+        $this->csr = openssl_csr_new($certParameters->toArray(), $privateKey, $this->configArgs);
     }
 
     protected function _getRsa()
     {
-        if ($this->rsa == null) {
-            $this->rsa = new RSACryptoServiceProvider();
-        }
+        $this->rsa = new RSACryptoServiceProvider();
 
         return $this->rsa;
+    }
+
+    /**
+     * Return ConfigArgs for signed certificate
+     *
+     * @return array|null
+     */
+    public function getConfigArgs(): ?array
+    {
+        return $this->configArgs;
+    }
+
+    /**
+     * Return original certificate parameters from which it was created
+     *
+     * @return CertParameters
+     */
+    public function getCertParameters(): CertParameters
+    {
+        return $this->certParameters;
     }
 
     /**
@@ -52,16 +84,7 @@ class X509Certificate2
      */
     public function getPrivateKey()
     {
-        return $this->privateKey->getPrivateKey();
-    }
-
-    /**
-     * @return \MayMeow\Cert\X509Certificate2
-     */
-    public function setPrivateKey($privateKey): X509Certificate2
-    {
-        $this->privateKey->setPrivateKey($privateKey);
-        return $this;
+        return $this->rsaParameters->getPrivateKey();
     }
 
     /**
@@ -73,9 +96,9 @@ class X509Certificate2
     }
 
     /**
-     * @deprecated
      * @param $signedCert
      * @return $this
+     * @deprecated
      */
     public function setSignedCert($signedCert)
     {
@@ -89,16 +112,6 @@ class X509Certificate2
     public function getEncryptionPass()
     {
         return $this->encryptionPass;
-    }
-
-    /**
-     * @param $encryptionPass
-     * @return $this
-     */
-    public function setEncryptionPass($encryptionPass)
-    {
-        $this->encryptionPass = $encryptionPass;
-        return $this;
     }
 
     /**
@@ -123,6 +136,7 @@ class X509Certificate2
 
     /**
      * Sign certificate with Certification authority
+     *
      * @param $daysValid
      * @param $caCertificate
      * @param $caKey
@@ -151,7 +165,7 @@ class X509Certificate2
         $this->signedCert = openssl_csr_sign(
             $this->csr,
             null,
-            $this->privateKey->getPrivateKey(),
+            $this->rsaParameters->getPrivateKey(),
             $daysValid,
             $certConfiguration,
             time()

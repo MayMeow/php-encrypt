@@ -26,7 +26,11 @@ class AESCryptoServiceProvider
         }
     }
 
-    public function setIV($iv)
+    /**
+     * @param $iv
+     * @return AESCryptoServiceProvider
+     */
+    public function setIV($iv): AESCryptoServiceProvider
     {
         $this->iv = $iv;
 
@@ -34,17 +38,19 @@ class AESCryptoServiceProvider
     }
 
     /**
-     * @param mixed $key
+     * @param $key
+     * @return AESCryptoServiceProvider
      */
-    public function setKey($key)
+    public function setKey($key): AESCryptoServiceProvider
     {
         $this->key = $key;
 
         return $this;
-
-
     }
 
+    /**
+     * @return bool|string
+     */
     public function generateKey()
     {
         if (in_array($this->cipher, openssl_get_cipher_methods())) {
@@ -56,6 +62,9 @@ class AESCryptoServiceProvider
         return false;
     }
 
+    /**
+     * @return bool|string
+     */
     public function generateIV()
     {
         if (in_array($this->cipher, openssl_get_cipher_methods())) {
@@ -67,14 +76,25 @@ class AESCryptoServiceProvider
         return false;
     }
 
-    public function encrypt($plainText)
+    /**
+     * Returns encrypted text
+     *
+     * @param string $plainText
+     * @return string
+     */
+    public function encrypt(string $plainText): string
     {
         $encryptedBytes = openssl_encrypt($plainText, $this->cipher, $this->key, OPENSSL_RAW_DATA, $this->iv, $this->tag, $this->aad);
 
         return base64_encode($this->iv . $this->tag . $encryptedBytes);
     }
 
-    public function decrypt($encryptedData)
+    /**
+     * Returns decrypted text
+     * @param string $encryptedData
+     * @return string
+     */
+    public function decrypt(string $encryptedData): string
     {
         $c = base64_decode($encryptedData);
 
@@ -83,8 +103,6 @@ class AESCryptoServiceProvider
         $this->tag = substr($c, $iv_len, static::DEFAULT_GCM_TAG_LENGTH);
         $encryptedBytes = substr($c, $iv_len + static::DEFAULT_GCM_TAG_LENGTH);
 
-        $originalText =  openssl_decrypt($encryptedBytes, $this->cipher, $this->key, OPENSSL_RAW_DATA, $this->iv, $this->tag, $this->aad);
-
-        return $originalText;
+        return openssl_decrypt($encryptedBytes, $this->cipher, $this->key, OPENSSL_RAW_DATA, $this->iv, $this->tag, $this->aad);
     }
 }
