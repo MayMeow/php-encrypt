@@ -5,7 +5,11 @@ namespace MayMeow\Cryptography\Cert;
 use MayMeow\Cryptography\RSA\RSACryptoServiceProvider;
 use MayMeow\Cryptography\RSA\RSAParameters;
 
-class X509Certificate2
+/**
+ * Class X509Certificate2
+ * @package MayMeow\Cryptography\Cert
+ */
+class X509Certificate2 implements X509Certificate2Interface
 {
     const TYPE_CA = 'ca';
     const TYPE_USER = 'user';
@@ -18,19 +22,34 @@ class X509Certificate2
     /** @var $csr */
     protected $csr;
 
-    protected RSAParameters $privateKey;
+    protected RSAParameters $rsaParameters;
 
     protected $signedCert;
 
     protected $encryptionPass;
 
-    public function __construct(CertParameters $certParameters = null, array $configArgs = null)
-    {
-        $this->encryptionPass = rand(100000, 999999);
-        $this->privateKey = $this->_getRsa()->generateKeyPair();
+    protected CertParameters $certParameters;
 
-        $privKey = $this->privateKey->getPrivateKey();
-        $this->csr = openssl_csr_new($certParameters->toArray(), $privKey, $configArgs);
+    /**
+     * @var array|null
+     */
+    protected ?array $configArgs;
+
+    /**
+     * X509Certificate2 constructor.
+     * @param CertParameters $certParameters
+     * @param array|null $configArgs
+     */
+    public function __construct(CertParameters $certParameters, array $configArgs = null)
+    {
+        $this->certParameters = $certParameters;
+        $this->encryptionPass = rand(100000, 999999);
+
+        $this->rsaParameters = $this->_getRsa()->generateKeyPair();
+        $privateKey = $this->rsaParameters->getPrivateKey();
+        $this->configArgs = $configArgs;
+
+        $this->csr = openssl_csr_new($certParameters->toArray(), $privateKey, $this->configArgs);
     }
 
     protected function _getRsa()
@@ -41,11 +60,31 @@ class X509Certificate2
     }
 
     /**
+     * Return ConfigArgs for signed certificate
+     *
+     * @return array|null
+     */
+    public function getConfigArgs(): ?array
+    {
+        return $this->configArgs;
+    }
+
+    /**
+     * Return original certificate parameters from which it was created
+     *
+     * @return CertParameters
+     */
+    public function getCertParameters(): CertParameters
+    {
+        return $this->certParameters;
+    }
+
+    /**
      * @return mixed
      */
     public function getPrivateKey()
     {
-        return $this->privateKey->getPrivateKey();
+        return $this->rsaParameters->getPrivateKey();
     }
 
     /**
@@ -97,6 +136,7 @@ class X509Certificate2
 
     /**
      * Sign certificate with Certification authority
+     *
      * @param $daysValid
      * @param $caCertificate
      * @param $caKey
@@ -125,7 +165,7 @@ class X509Certificate2
         $this->signedCert = openssl_csr_sign(
             $this->csr,
             null,
-            $this->privateKey->getPrivateKey(),
+            $this->rsaParameters->getPrivateKey(),
             $daysValid,
             $certConfiguration,
             time()
