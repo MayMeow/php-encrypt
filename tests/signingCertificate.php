@@ -100,7 +100,7 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
 
         $ca = new \MayMeow\Cryptography\Authority\CertificateAuthority();
 
-        $certificate = $ca->createSelfSigned($csr, 'user', 7000);
+        $certificate = $ca->createSelfSigned($csr, \MayMeow\Cryptography\Cert\X509Certificate2::TYPE_USER, 7000);
 
         $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;
 

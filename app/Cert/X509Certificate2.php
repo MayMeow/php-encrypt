@@ -162,6 +162,10 @@ class X509Certificate2 implements X509Certificate2Interface
      */
     public function selfSigned($daysValid, array $certConfiguration = null)
     {
+        if ($certConfiguration == null) {
+            $certConfiguration = $this->configArgs;
+        }
+
         $this->signedCert = openssl_csr_sign(
             $this->csr,
             null,
