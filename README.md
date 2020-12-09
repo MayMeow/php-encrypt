@@ -239,6 +239,10 @@ SEE changelog
 
 * [MayMeow (Emma)](https://github.com/MayMeow)
 
+## Stargazers
+
+[![Stargazers repo roster for @MayMeow/php-encrypt](https://reporoster.com/stars/MayMeow/php-encrypt)](https://github.com/MayMeow/php-encrypt/stargazers)
+
 ## License
 
 MIT
