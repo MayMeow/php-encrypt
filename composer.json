@@ -31,6 +31,6 @@
     },
     "scripts": {
         "test": "phpunit --colors=always",
-        "test-coverage": "phpunit --coverage-text --colors=never"
+        "test-coverage": "phpunit --coverage-text --colors=never --coverage-clover build/logs/clover.xml"
     }
 }
