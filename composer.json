@@ -30,7 +30,7 @@
         "phpunit/phpunit": "^7.0"
     },
     "scripts": {
-        "test": "phpunit --coverage-text --colors=never --coverage-clover build/logs/clover.xml",
+        "test": "phpunit",
         "test-coverage": "phpunit --coverage-text --colors=never --coverage-clover build/logs/clover.xml"
     }
 }
