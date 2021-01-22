@@ -12,13 +12,3 @@ jobs:
       
     - name: PHPUnit Test by MayMeow
       uses: MayMeowHQ/PHPUnit-Test-Action@v5
-
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --no-suggest
-    
-    - name: Run tests
-      run: phpunit --coverage-text --coverage-clover build/logs/clover.xml
