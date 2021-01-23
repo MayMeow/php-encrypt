@@ -9,52 +9,18 @@ images: []
 menu:
   docs:
     parent: "prologue"
-weight: 110
+weight: 100
 toc: true
 ---
 
-## Requirements
+## Installation
 
-- [Node.js](https://nodejs.org/) >= 14.x
-
-## Start a new Doks project
-
-Create a new site, change directories, install npm packages, and start development server.
-
-### Create a new site
-
-{{< btn-copy text="git clone https://github.com/h-enk/doks.git my-doks-site" >}}
-
+Install with docker:
 ```bash
-git clone https://github.com/h-enk/doks.git my-doks-site
+composer require maymeow/php-encrypt
 ```
 
-### Change directories
-
-{{< btn-copy text="cd my-doks-site" >}}
-
-```bash
-cd my-doks-site
+And intialize it withhin your script
+```php
+$cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 ```
-
-### Install npm packages
-
-{{< btn-copy text="npm install" >}}
-
-```bash
-npm install
-```
-
-### Start development server
-
-{{< btn-copy text="npm run start" >}}
-
-```bash
-npm run start
-```
-
-Doks will start the Hugo development webserver accessible by default at `http://localhost:1313`. Saved changes will live reload in the browser.
-
-## Other commands
-
-Doks comes with commands for common tasks. [Commands →]({{< ref "commands" >}})
