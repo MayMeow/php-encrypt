@@ -1,6 +1,7 @@
 ---
 title: "Requirements"
-description: ""
+description: "Requirements on system, extension etc."
+lead: "Requirements on system, extension etc."
 date: 2021-01-23T14:03:34+01:00
 lastmod: 2021-01-23T14:03:34+01:00
 draft: false
@@ -8,10 +9,10 @@ images: []
 menu:
   docs:
     parent: "prologue"
-weight: 110
+weight: 103
 ---
 
-# Requirements
+## PHP Requirements
 
 * PHP >= 7.4.0
 * Composer

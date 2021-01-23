@@ -1,7 +1,7 @@
 ---
 title: "Quick Start"
-description: "One page summary of how to start a new Doks project."
-lead: "One page summary of how to start a new Doks project."
+description: "How to use PHP Encrypt in my project."
+lead: "How to use PHP Encrypt in my project."
 date: 2020-11-16T13:59:39+01:00
 lastmod: 2020-11-16T13:59:39+01:00
 draft: false
@@ -9,7 +9,7 @@ images: []
 menu:
   docs:
     parent: "prologue"
-weight: 100
+weight: 102
 toc: true
 ---
 
@@ -24,3 +24,5 @@ And intialize it withhin your script
 ```php
 $cf = new \MayMeow\Factory\CertificateFactory(new \MayMeow\Model\EncryptConfiguration());
 ```
+
+Make sure you meet the [following requirements]({{< ref "requirements" >}})

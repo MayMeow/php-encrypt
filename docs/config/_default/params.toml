@@ -17,8 +17,8 @@ ogLocale = "en_US"
 ## JSON-LD
 schemaType = "Organization"
 schemaLogo = "logo-doks.png"
-schemaTwitter = "https://twitter.com/henkverlinde"
-schemaLinkedIn = "https://www.linkedin.com/in/henkverlinde/"
+schemaTwitter = "https://twitter.com/TheMayMeow"
+# schemaLinkedIn = "https://www.linkedin.com/in/henkverlinde/"
 schemaGitHub = "https://github.com/MayMeow/php-encrypt"
 schemaSection = "blog"
 
@@ -43,5 +43,5 @@ alert = true
 alertText = "Like PHP Encrypt? <a class=\"alert-link\" href=\"https://github.com/MayMeow/php-encrypt/stargazers\">Star on GitHub</a>. Thanks!</a>"
 
 # Edit Page
-docsRepo = "https://github.com/MayMeow/php-encrypt"
-editPage = true
+docsRepo = "https://github.com/MayMeow/php-encrypt/docs/"
+editPage = false
