@@ -1,10 +1,11 @@
-v 2020.10 (unreleased)
+v 2121.1
 
+* Add `MayMeow\Cryptography\Authority\CertificateAuthority` and `MayMeow\Cryptography\Authority\CertificateAuthorityInterface`
 * `MayMeow\Cryptography\Cert\CertParameters` now storing data into object vars instead arrays and implementing `SerializableInterface`
 * `MayMeow\Loaders\FileLoader` is now deprecated and using `MayMeow\Cryptography\Filesystem\RsaParametersFileLoader` to load and return KeyPairs
 * `MayMeow\Model\KeyPair` is duplicate of `MayMeow\Cryptography\RSA\RSAParameters` and is now deprecated.
-
-All deprecated Classes will be removed in version **2121.1** which will be released somewhere in January.
+* `MayMeow\Cryptography\Authority\DefaultCertificateAuthorityConfiguration` container will bring default certification authority paths to templates to create own you need to implement  `MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface`
+* To load configArgs for certificate use `MayMeow\Cryptography\Authority\CertificateConfigArgs` it will need to load CertificationAuthorityConfiguration, constructor require to implement `MayMeow\Cryptography\Authority\CertificateAuthorityInterface` if yo want to create own certification authority
 
 v 2020.6
 
