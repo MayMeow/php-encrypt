@@ -29,4 +29,5 @@ deploy:
   only:
     - tags
   script:
-    - 'curl --header "Job-Token: $CI_JOB_TOKEN" --data tag=$CI_COMMIT_REF_NAME "https://gitlab.example.com/api/v4/projects/$CI_PROJECT_ID/packages/composer"'
+    - apk add curl
+    - 'curl --header "Job-Token: $CI_JOB_TOKEN" --data tag=$CI_COMMIT_REF_NAME "https://gitlab.hsoww.net/api/v4/projects/$CI_PROJECT_ID/packages/composer"'
