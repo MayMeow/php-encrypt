@@ -1,5 +1,7 @@
 # PHP Encrypt
 
+This is readonly Mirror however you can still conttibute if you have email. For more infomation scroll down to **Contributing**.
+
 Library for signing certificates with selfsigned CA
 
 ![](https://github.com/maymeow/php-encrypt/workflows/PHP%20Composer/badge.svg)
@@ -223,11 +225,26 @@ $originalText = $csp2->decrypt($encryptedText);
 
 ## Contributing
 
-1. Fork it!
-2. Create your feature branch: `git checkout -b my-new-feature`
-3. Commit your changes: `git commit -am 'Add some feature'`
-4. Push to the branch: `git push origin my-new-feature`
-5. Submit a pull request :D
+This repository is mirror from my own git server. If you want to contribute you will need email.
+
+1. Create new branch
+
+``` bash
+it checkout -b <your branch name>
+```
+
+2. Create new commit from your changes and make patch.
+
+``` bash
+git add <file>
+git commit
+git format-patch -o /tmp/ HEAD^
+```
+
+3. Send you patch to my email.
+
+**DO NOT** make changes right inside master branch. I will not accept that.
+
 
 ## History
 
