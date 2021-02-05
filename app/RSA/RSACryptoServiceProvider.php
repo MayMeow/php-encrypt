@@ -105,9 +105,9 @@ class RSACryptoServiceProvider
         return $plainText;
     }
 
-    protected function seal()
+    protected function seal(string $plain_text) : string
     {
-        //
+        //openssl_open($plain_text, $sealed_data, $ekeys, [$this->rsaParameters->getPrivateKey()])
     }
 
     protected function open()
@@ -121,11 +121,7 @@ class RSACryptoServiceProvider
      */
     public function sign($data) : string
     {
-        if ($this->rsaParameters->isPrivateKeyEncrypted()) {
-            $privKey = $this->rsaParameters->decryptPrivateKey();
-        } else {
-            $privKey = $this->rsaParameters->getPrivateKey();
-        }
+        $privKey = $this->_getPrivateKey();
 
         $result = openssl_sign($data, $signature, $privKey, OPENSSL_ALGO_SHA512);
 
@@ -152,5 +148,14 @@ class RSACryptoServiceProvider
         $fingerprint = join(':', str_split(md5(base64_decode($this->rsaParameters->getPublicKey())), 2));
 
         return $fingerprint;
+    }
+
+    protected function _getPrivateKey()
+    {
+        if ($this->rsaParameters->isPrivateKeyEncrypted()) {
+            $privKey = $this->rsaParameters->decryptPrivateKey();
+        } else {
+            $privKey = $this->rsaParameters->getPrivateKey();
+        }
     }
 }
