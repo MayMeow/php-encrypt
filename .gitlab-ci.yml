@@ -15,7 +15,7 @@ stages:
     - composer install --no-ansi --no-interaction --no-progress --no-scripts
 
 phpunit test:
-  image: pkg.hsoww.net/dev-community/php-ci-cd:latest
+  image: maymeow/php-ci-cd
   <<: *run-on-do-docker
   <<: *before-script
   stage: 🧪 test
