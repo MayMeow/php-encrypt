@@ -39,7 +39,7 @@ pages:
   stage: 📃 docs
   script:
     - cd ./docs
-    - hugo
+    - hugo --gc --minify
   artifacts:
     paths:
       - docs/public
