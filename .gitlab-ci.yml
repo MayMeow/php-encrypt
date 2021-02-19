@@ -43,3 +43,4 @@ pages:
   artifacts:
     paths:
       - docs/public
+  allow_failure: true
