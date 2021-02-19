@@ -1,6 +1,7 @@
 stages:
   - 🧪 test
   - 🚀 deploy
+  - 📃 docs
 
 # Tags
 .run-on-do-docker: &run-on-do-docker
@@ -31,3 +32,14 @@ deploy:
   script:
     - apk add curl
     - 'curl --header "Job-Token: $CI_JOB_TOKEN" --data tag=$CI_COMMIT_REF_NAME "https://gitlab.hsoww.net/api/v4/projects/$CI_PROJECT_ID/packages/composer"'
+
+pages:
+  <<: *run-on-do-docker
+  image: pkg.cloud.themaymeow.com/ci/hugo:v0.80.0-extended
+  stage: 📃 docs
+  script:
+    - cd ./docs
+    - hugo
+  artifacts:
+    paths:
+      - docs/public
