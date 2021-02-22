@@ -28,7 +28,10 @@ interface RSAParametersInterface
      */
     public function decryptPrivateKey();
 
+    /**
+     * Return passphrase needed to decrypt key
+     *
+     * @return mixed
+     */
     public function getPassphrase();
-
-    public function getCertifcate();
 }

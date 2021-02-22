@@ -78,7 +78,7 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
         }
 
         // Create RSAParameters from generated certificate
-        $loader = new \MayMeow\Cryptography\RSA\RsaParametersX509CertificateLoader($cert);
+        $loader = new \MayMeow\Cryptography\RSA\CertificateLoader($cert);
         $params = $loader->load();
 
         // Write Certificaate to file
@@ -107,7 +107,7 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
         $certificate = $ca->createSelfSigned($csr, \MayMeow\Cryptography\Cert\X509Certificate2::TYPE_CA, 7000);
 
         // Create RSAParameters from generated certificate
-        $loader = new \MayMeow\Cryptography\RSA\RsaParametersX509CertificateLoader($certificate);
+        $loader = new \MayMeow\Cryptography\RSA\CertificateLoader($certificate);
         $params = $loader->load();
 
         $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;
@@ -138,7 +138,7 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
 
     public function creteUserCert()
     {
-        $caCert = new \MayMeow\Cryptography\RSA\RSAParametersFileLoader('EmmaX Root CA', '954024');
+        $caCert = new \MayMeow\Cryptography\RSA\CertificateFileLoader('EmmaX Root CA', '954024');
         $caParams = $caCert->load();
 
         $csr = new \MayMeow\Cryptography\Cert\CertParameters();
@@ -151,7 +151,7 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
         $certificate = $ca->sign($csr, $caParams, \MayMeow\Cryptography\Cert\X509Certificate2::TYPE_USER);
 
         // Create RSAParameters from generated certificate
-        $loader = new \MayMeow\Cryptography\RSA\RsaParametersX509CertificateLoader($certificate);
+        $loader = new \MayMeow\Cryptography\RSA\CertificateLoader($certificate);
         $params = $loader->load();
 
         $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;

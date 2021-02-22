@@ -2,7 +2,14 @@
 
 namespace MayMeow\Cryptography\RSA;
 
-class RSAParametersFileLoader implements RsaParametersLoaderInterface
+/**
+ * Class CertificateFileLoader
+ *
+ * Load RSAParameters from file
+ *
+ * @package MayMeow\Cryptography\RSA
+ */
+class CertificateFileLoader implements RsaParametersLoaderInterface
 {
     protected $pk;
 
@@ -23,7 +30,11 @@ class RSAParametersFileLoader implements RsaParametersLoaderInterface
         $this->pass = $pass;
     }
 
-    public function load(): RSAParametersInterface
+    /**
+     * @param string|null $name
+     * @return RSAParametersInterface
+     */
+    public function load(string $name = null): RSAParametersInterface
     {
         return new RSAParameters($this->pk, $this->crt, $this->pass, $this->rawPublicKey);
     }

@@ -7,7 +7,7 @@ use MayMeow\Model\KeyPair;
 use MayMeow\Model\KeyPairInterface;
 
 /**
- * Class FileLoader
+ * Class CertificateFileLoader
  * @package MayMeow\Loaders
  * @deprecated
  * @see \MayMeow\Cryptography\Filesystem\RsaParametersFileLoader
@@ -17,7 +17,7 @@ class FileLoader implements KeyPairInterface
     protected $keyPair;
 
     /**
-     * FileLoader constructor.
+     * CertificateFileLoader constructor.
      *
      * Load certificate from file
      * @param $certificateName

@@ -2,7 +2,7 @@
 
 namespace MayMeow\Cryptography\RSA;
 
-class RSAParameters implements RSAParametersInterface
+class RSAParameters implements RSAParametersInterface, RSACertificateInterface
 {
     private $privateKey;
 

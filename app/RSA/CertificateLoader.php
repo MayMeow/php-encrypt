@@ -4,7 +4,14 @@ namespace MayMeow\Cryptography\RSA;
 
 use MayMeow\Cryptography\Cert\X509Certificate2;
 
-class RsaParametersX509CertificateLoader implements RsaParametersLoaderInterface
+/**
+ * Class CertificateLoader
+ *
+ * Load RSA parameters from generated certificate in memory
+ *
+ * @package MayMeow\Cryptography\RSA
+ */
+class CertificateLoader implements RsaParametersLoaderInterface
 {
     protected X509Certificate2 $certificate;
 
@@ -13,7 +20,7 @@ class RsaParametersX509CertificateLoader implements RsaParametersLoaderInterface
         $this->certificate = $certificate;
     }
 
-    public function load(): RSAParametersInterface
+    public function load(string $name = null): RSAParametersInterface
     {
         $cert = $this->certificate->getSignedCert();
         $key = $this->certificate->getPrivateKey();
@@ -21,6 +28,5 @@ class RsaParametersX509CertificateLoader implements RsaParametersLoaderInterface
 
 
         return new RSAParameters($key,$cert, $pass);
-        // TODO: Implement load() method.
     }
 }
