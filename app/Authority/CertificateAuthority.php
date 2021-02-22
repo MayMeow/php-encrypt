@@ -4,6 +4,7 @@ namespace MayMeow\Cryptography\Authority;
 
 use MayMeow\Cryptography\Cert\CertParameters;
 use MayMeow\Cryptography\Cert\X509Certificate2;
+use MayMeow\Cryptography\RSA\RSAParametersInterface;
 
 /**
  * Class CertificateAuthority
@@ -57,6 +58,17 @@ class CertificateAuthority implements CertificateAuthorityInterface
         $certificate = new X509Certificate2($certParameters, $this->configArgs->getArgs($type));
 
         $certificate->selfSigned($daysValid);
+
+        return $certificate;
+    }
+
+    public function sign(CertParameters $certParameters, RSAParametersInterface $authority, string $type, int $daysValid = 365) : X509Certificate2
+    {
+        $certificate = new X509Certificate2($certParameters, $this->configArgs->getArgs($type));
+
+        $authority->decryptPrivateKey();
+
+        $certificate->sign($authority->getCertifcate(), $authority->getPrivateKey(), $daysValid);
 
         return $certificate;
     }

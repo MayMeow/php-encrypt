@@ -2,7 +2,6 @@
 
 namespace MayMeow\Cryptography\RSA;
 
-
 interface RSAParametersInterface
 {
     /**
@@ -28,4 +27,8 @@ interface RSAParametersInterface
      * @return mixed
      */
     public function decryptPrivateKey();
+
+    public function getPassphrase();
+
+    public function getCertifcate();
 }

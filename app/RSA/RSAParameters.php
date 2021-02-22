@@ -19,7 +19,8 @@ class RSAParameters implements RSAParametersInterface
     public function __construct(
         $privateKey,
         $publicKey,
-        $passphrase = null
+        $passphrase = null,
+        $certificate = null
     )
     {
         $this->privateKey = $privateKey;
@@ -27,6 +28,10 @@ class RSAParameters implements RSAParametersInterface
 
         if ($passphrase != null) {
             $this->passphrase = $passphrase;
+        }
+
+        if ($certificate != null) {
+            $this->certificate = $certificate;
         }
     }
 
@@ -52,6 +57,7 @@ class RSAParameters implements RSAParametersInterface
     }
 
     /**
+     * OpenSSL resource
      * @return mixed Private key as it is
      */
     public function getPrivateKey()
@@ -59,8 +65,26 @@ class RSAParameters implements RSAParametersInterface
         return $this->privateKey;
     }
 
+    /**
+     * Openssl Resource
+     * @return mixed
+     */
     public function getPublicKey()
     {
         return $this->publicKey;
+    }
+
+    /**
+     * String or int TODO
+     * @return mixed
+     */
+    public function getPassphrase()
+    {
+        return $this->passphrase;
+    }
+
+    public function getCertifcate()
+    {
+        return $this->certificate;
     }
 }

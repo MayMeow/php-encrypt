@@ -77,16 +77,20 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
             mkdir($path);
         }
 
-        // Write Certificaate to file
-        openssl_x509_export_to_file($cert->getSignedCert(), $path . 'cert.crt');
+        // Create RSAParameters from generated certificate
+        $loader = new \MayMeow\Cryptography\RSA\RsaParametersX509CertificateLoader($cert);
+        $params = $loader->load();
 
-        // Write primaary key to file
-        openssl_pkey_export_to_file($cert->getPrivateKey(),
-            $path . 'key.pem', $cert->getEncryptionPass(), $cArgs->getArgs('user'));
+        // Write Certificaate to file
+        openssl_x509_export_to_file($params->getPublicKey(), $path . 'cert.crt');
+
+        // Write primary key to file
+        openssl_pkey_export_to_file($params->getPrivateKey(),
+            $path . 'key.pem', $params->getPassphrase(), $cArgs->getArgs('user'));
 
         // Write PCKS12
-        openssl_pkcs12_export_to_file($cert->getSignedCert(),
-            $path . 'cert.pfx', $cert->getPrivateKey(), $cert->getEncryptionPass(),
+        openssl_pkcs12_export_to_file($params->getPublicKey(),
+            $path . 'cert.pfx', $params->getPrivateKey(), $params->getPassphrase(),
             $cArgs->getArgs('user'));
     }
 
@@ -94,13 +98,17 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
     {
         // Add certificate informations
         $csr = new \MayMeow\Cryptography\Cert\CertParameters();
-        $csr->setCommonName('EmmaX');
+        $csr->setCommonName('EmmaX Root CA');
         $csr->setEmailAddress('emma@themaymeow.com');
         $csr->setOrganizationName('The MayMeow .Ltd');
 
         $ca = new \MayMeow\Cryptography\Authority\CertificateAuthority();
 
-        $certificate = $ca->createSelfSigned($csr, \MayMeow\Cryptography\Cert\X509Certificate2::TYPE_USER, 7000);
+        $certificate = $ca->createSelfSigned($csr, \MayMeow\Cryptography\Cert\X509Certificate2::TYPE_CA, 7000);
+
+        // Create RSAParameters from generated certificate
+        $loader = new \MayMeow\Cryptography\RSA\RsaParametersX509CertificateLoader($certificate);
+        $params = $loader->load();
 
         $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;
 
@@ -119,14 +127,55 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
         openssl_pkcs12_export_to_file($certificate->getSignedCert(),
             $path . 'cert.pfx', $certificate->getPrivateKey(), $certificate->getEncryptionPass(),
             $certificate->getConfigArgs());
+
+        file_put_contents($path . 'pass.txt', $params->getPassphrase());
     }
 
     public function getDefaultConfiguration(): \MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface
     {
         return $this->conf;
     }
+
+    public function creteUserCert()
+    {
+        $caCert = new \MayMeow\Cryptography\RSA\RSAParametersFileLoader('EmmaX Root CA', '954024');
+        $caParams = $caCert->load();
+
+        $csr = new \MayMeow\Cryptography\Cert\CertParameters();
+        $csr->setCommonName('Emma Meow');
+        $csr->setEmailAddress('emma@themaymeow.com');
+        $csr->setOrganizationName('The MayMeow .Ltd');
+
+        $ca = new \MayMeow\Cryptography\Authority\CertificateAuthority();
+
+        $certificate = $ca->sign($csr, $caParams, \MayMeow\Cryptography\Cert\X509Certificate2::TYPE_USER);
+
+        // Create RSAParameters from generated certificate
+        $loader = new \MayMeow\Cryptography\RSA\RsaParametersX509CertificateLoader($certificate);
+        $params = $loader->load();
+
+        $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;
+
+        if (!file_exists($path)) {
+            mkdir($path);
+        }
+
+        // Write Certificaate to file
+        openssl_x509_export_to_file($params->getPublicKey(), $path . 'cert.crt');
+
+        // Write primary key to file
+        openssl_pkey_export_to_file($params->getPrivateKey(),
+            $path . 'key.pem', $params->getPassphrase(), $certificate->getConfigArgs());
+
+        // Write PCKS12
+        openssl_pkcs12_export_to_file($params->getPublicKey(),
+            $path . 'cert.pfx', $params->getPrivateKey(), $params->getPassphrase(),
+            $certificate->getConfigArgs());
+
+        file_put_contents($path . 'pass.txt', $params->getPassphrase());
+    }
 }
 
 $t = new TestCA();
 
-$t->testWighCA();
+$t->creteUserCert();
