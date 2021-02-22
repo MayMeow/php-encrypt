@@ -110,25 +110,9 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
         $loader = new \MayMeow\Cryptography\RSA\CertificateLoader($certificate);
         $params = $loader->load();
 
-        $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;
-
-        if (!file_exists($path)) {
-            mkdir($path);
-        }
-
-        // Write Certificaate to file
-        openssl_x509_export_to_file($certificate->getSignedCert(), $path . 'cert.crt');
-
-        // Write primaary key to file
-        openssl_pkey_export_to_file($certificate->getPrivateKey(),
-            $path . 'key.pem', $certificate->getEncryptionPass(), $certificate->getConfigArgs());
-
-        // Write PCKS12
-        openssl_pkcs12_export_to_file($certificate->getSignedCert(),
-            $path . 'cert.pfx', $certificate->getPrivateKey(), $certificate->getEncryptionPass(),
-            $certificate->getConfigArgs());
-
-        file_put_contents($path . 'pass.txt', $params->getPassphrase());
+        // write to file
+        $writer = new \MayMeow\Cryptography\Cert\X509CertificateFileWriter($certificate->getCertParameters()->getCommonName());
+        $writer->write($certificate, false, true);
     }
 
     public function getDefaultConfiguration(): \MayMeow\Cryptography\Authority\CertificateAuthorityConfigurationInterface
@@ -138,7 +122,8 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
 
     public function creteUserCert()
     {
-        $caCert = new \MayMeow\Cryptography\RSA\CertificateFileLoader('EmmaX Root CA', '954024');
+        // Load RSA parameters and Certificate from disk
+        $caCert = new \MayMeow\Cryptography\RSA\CertificateFileLoader('EmmaX Root CA', '688757');
         $caParams = $caCert->load();
 
         $csr = new \MayMeow\Cryptography\Cert\CertParameters();
@@ -151,31 +136,24 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
         $certificate = $ca->sign($csr, $caParams, \MayMeow\Cryptography\Cert\X509Certificate2::TYPE_USER);
 
         // Create RSAParameters from generated certificate
-        $loader = new \MayMeow\Cryptography\RSA\CertificateLoader($certificate);
-        $params = $loader->load();
+        /*
+         * TODO do not create RSA parameters from certificate because
+         *
+         * Certificate has X509 certificate and private key
+         * RSAParameters are Public and Private key
+         *
+         * So there will be problem with loading because you need load certificate not only public key if you want sing user certificates.
+         *
+         * SO use CeritficateLoader and CertificateWriter.
+         */
 
-        $path = WWW_ROOT . $certificate->getCertParameters()->getCommonName() . DS;
-
-        if (!file_exists($path)) {
-            mkdir($path);
-        }
-
-        // Write Certificaate to file
-        openssl_x509_export_to_file($params->getPublicKey(), $path . 'cert.crt');
-
-        // Write primary key to file
-        openssl_pkey_export_to_file($params->getPrivateKey(),
-            $path . 'key.pem', $params->getPassphrase(), $certificate->getConfigArgs());
-
-        // Write PCKS12
-        openssl_pkcs12_export_to_file($params->getPublicKey(),
-            $path . 'cert.pfx', $params->getPrivateKey(), $params->getPassphrase(),
-            $certificate->getConfigArgs());
-
-        file_put_contents($path . 'pass.txt', $params->getPassphrase());
+        $writer = new \MayMeow\Cryptography\Cert\X509CertificateFileWriter($certificate->getCertParameters()->getCommonName());
+        $writer->write($certificate, false, true);
     }
 }
 
 $t = new TestCA();
 
+// $t->testWighCA();
+// $t->testWighCA();
 $t->creteUserCert();
