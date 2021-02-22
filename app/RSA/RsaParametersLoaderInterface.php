@@ -5,9 +5,10 @@ namespace MayMeow\Cryptography\RSA;
 interface RsaParametersLoaderInterface
 {
     /**
-     * Load RSAParameters
+     * Load RSA parameters
      *
+     * @param string|null $name
      * @return RSAParametersInterface
      */
-    public function load() : RSAParametersInterface;
+    public function load(string $name = null) : RSAParametersInterface;
 }

@@ -36,7 +36,7 @@ class RsaParametersFileLoader implements FileLoaderInterface, RsaParametersLoade
      * @param string $name
      * @return RSAParametersInterface
      */
-    public function load(string $name): RSAParametersInterface
+    public function load(string $name = null): RSAParametersInterface
     {
         $this->rsaParameters = $this->_initialize($name);
 
