@@ -21,6 +21,7 @@ class CertificateFileLoader implements RsaParametersLoaderInterface
     {
         $pkInfo = file_get_contents(WWW_ROOT . $name . DS . 'key.pem');
 
+        // do not specify password for decryption into RSA parameters because key is already decrypted
         $this->pk = openssl_get_privatekey($pkInfo, $pass);
 
         $this->rawPublicKey = file_get_contents(WWW_ROOT . $name . DS . 'cert.crt');
@@ -36,6 +37,6 @@ class CertificateFileLoader implements RsaParametersLoaderInterface
      */
     public function load(string $name = null): RSAParametersInterface
     {
-        return new RSAParameters($this->pk, $this->crt, $this->pass, $this->rawPublicKey);
+        return new RSAParameters($this->pk, $this->crt, null, $this->rawPublicKey);
     }
 }

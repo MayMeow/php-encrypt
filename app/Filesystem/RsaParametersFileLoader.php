@@ -9,6 +9,8 @@ use MayMeow\Cryptography\RSA\RsaParametersLoaderInterface;
 /**
  * Class RsaParametersFileLoader
  *
+ * TODO update thiss class or change it to deprecated
+ *
  * Returns RSA parameters from certificate files cert.crt, key.pem and code.txt if it is provided with encrypted key
  *
  * @package MayMeow\Cryptography\Filesystem
