@@ -123,7 +123,7 @@ class TestCA implements \MayMeow\Cryptography\Authority\CertificateAuthorityInte
     public function creteUserCert()
     {
         // Load RSA parameters and Certificate from disk
-        $caCert = new \MayMeow\Cryptography\RSA\CertificateFileLoader('EmmaX Root CA', '688757');
+        $caCert = new \MayMeow\Cryptography\RSA\CertificateFileLoader('EmmaX Root CA', '788189');
         $caParams = $caCert->load();
 
         $csr = new \MayMeow\Cryptography\Cert\CertParameters();

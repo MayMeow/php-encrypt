@@ -10,12 +10,9 @@ use MayMeow\Cryptography\Cert\X509CertificateFileWriter;
 use MayMeow\Cryptography\RSA\CertificateFileLoader;
 use MayMeow\Tests\TestCase;
 
-class CertificateFactoryTest extends TestCase
+class CertificateAuthorityTest extends TestCase
 {
-    protected $decyptionKey;
-
     protected string $caName = "EmmaX Root CA";
-
 
     /** @test */
     public function self_signed_ca_certificate_test()
@@ -46,7 +43,7 @@ class CertificateFactoryTest extends TestCase
     public function user_cert_signing_with_ca_test()
     {
         // Load RSA parameters and Certificate from disk
-        $caCert = new CertificateFileLoader($this->caName, $this->decyptionKey);
+        $caCert = new CertificateFileLoader($this->caName, file_get_contents(WWW_ROOT . $this->caName . DS . 'pass.txt'));
         $caParams = $caCert->load();
 
         $csr = new CertParameters();
@@ -55,7 +52,6 @@ class CertificateFactoryTest extends TestCase
         $csr->setOrganizationName('The MayMeow .Ltd');
 
         $ca = new CertificateAuthority();
-
         $certificate = $ca->sign($csr, $caParams, X509Certificate2::TYPE_USER);
 
         $writer = new X509CertificateFileWriter($certificate->getCertParameters()->getCommonName());
