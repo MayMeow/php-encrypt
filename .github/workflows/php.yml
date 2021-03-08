@@ -11,4 +11,4 @@ jobs:
     - uses: actions/checkout@v1
       
     - name: PHPUnit Test by MayMeow
-      uses: MayMeowHQ/PHPUnit-Test-Action@v5
+      uses: MayMeowHQ/PHPUnit-Test-Action@v7.4.16
