@@ -23,6 +23,7 @@ class CertificateConfigArgs
 
     /**
      * CertificateConfigArgs constructor.
+     * 
      * @param CertificateAuthorityInterface $authorityConfiguration
      */
     private function __construct(CertificateAuthorityInterface $authorityConfiguration)

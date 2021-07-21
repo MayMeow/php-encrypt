@@ -55,7 +55,12 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * encrypt file with public key
+     * Standard encryption method. You will need public key to encrypt data.
+     * Can be used for data protection because need encrypt with private key.
+     * Dont give you private key anyone !!!
+     *
+     * @param $plainText
+     * @return string
      */
     public function encrypt($plainText) : string
     {
@@ -67,7 +72,10 @@ class RSACryptoServiceProvider
     }
 
     /**
-     * decrypt with private key
+     * Standard decryption method, will need private key to decrypt data previously encrypted with public key
+     *
+     * @param $encryptedText
+     * @return string
      */
     public function decrypt($encryptedText) : string
     {
@@ -83,6 +91,14 @@ class RSACryptoServiceProvider
         return $plainText;
     }
 
+    /**
+     * Encrypt given text with private key.
+     * Use it in specific situations (not for data protection) as for example license generation.
+     * You can decrypt text with your public key without any protection !!!
+     *
+     * @param $plainText
+     * @return string
+     */
     public function private_encrypt($plainText) : string
     {
         $encrypted = '';
@@ -97,6 +113,12 @@ class RSACryptoServiceProvider
         return base64_encode($encrypted);
     }
 
+    /**
+     * Decrypt text which was encrypted with private key
+     *
+     * @param $encryptedText
+     * @return string
+     */
     public function public_decrypt($encryptedText) : string
     {
         $plainText = '';
@@ -107,12 +129,13 @@ class RSACryptoServiceProvider
 
     protected function seal(string $plain_text) : string
     {
+        // todo
         //openssl_open($plain_text, $sealed_data, $ekeys, [$this->rsaParameters->getPrivateKey()])
     }
 
     protected function open()
     {
-
+        // todo
     }
 
     /**
@@ -141,6 +164,8 @@ class RSACryptoServiceProvider
     }
 
     /**
+     * Returns MD5 Fingerprint
+     *
      * @return string
      */
     public function getFingerPrint() : string

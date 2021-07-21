@@ -4,6 +4,8 @@ namespace MayMeow\Cryptography\Cert;
 
 /**
  * Class CertParameters
+ * Include Certificate parameters
+ *
  * @package MayMeow\Cryptography\Cert
  */
 class CertParameters implements SerializableInterface
