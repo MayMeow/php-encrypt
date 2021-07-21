@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  devcontainer:
+    build:
+      context: ./docker/devcontainer
+      dockerfile: Dockerfile
+    container_name: cake
+    working_dir: /app
+    volumes:
+    - ./:/app
