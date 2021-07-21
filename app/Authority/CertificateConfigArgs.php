@@ -22,8 +22,8 @@ class CertificateConfigArgs
     protected CertificateAuthorityConfigurationInterface $authorityConfiguration;
 
     /**
-     * CertificateConfigArgs constructor.
-     * 
+     * CertificateConfigArgs constructor it is used by CA
+     *
      * @param CertificateAuthorityInterface $authorityConfiguration
      */
     private function __construct(CertificateAuthorityInterface $authorityConfiguration)
