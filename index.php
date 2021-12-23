@@ -36,7 +36,7 @@ $cf1->setType('code_sign')
     ->sign()->toFile(['pcks12' => true]);
 
 $cf2->domainName()
-    ->setCommonName('Martin Kukolos');
+    ->setCommonName('Harry Potter');
 
 $cf2->setType('code_sign')
     ->setName('hogwarts-college/students/harry-potter-sha1')
