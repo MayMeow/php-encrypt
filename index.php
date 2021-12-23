@@ -28,10 +28,10 @@ $cf->setType('intermediate')
 
 
 $cf1->domainName()
-    ->setCommonName('Martin Kukolos');
+    ->setCommonName('Harry Potter');
 
 $cf1->setType('code_sign')
-    ->setName('hogwarts-college/students/martin-kukolos-sha256')
+    ->setName('hogwarts-college/students/harry-potter-sha256')
     ->setCa('hogwarts-college/intermediate', '711907')
     ->sign()->toFile(['pcks12' => true]);
 
@@ -39,6 +39,6 @@ $cf2->domainName()
     ->setCommonName('Martin Kukolos');
 
 $cf2->setType('code_sign')
-    ->setName('hogwarts-college/students/martin-kukolos-sha1')
+    ->setName('hogwarts-college/students/harry-potter-sha1')
     ->setCa('hogwarts-college/intermediate', '711907')
     ->sign('sha1')->toFile(['pcks12' => true]);
