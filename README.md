@@ -1,3 +1,5 @@
+If you like this package, please note that it is no longer in active development and please check [PHP-Cryphography](https://github.com/MayMeow/php-cryptography) package.
+
 # PHP Encrypt
 
 This is readonly Mirror however you can still conttibute if you have email. For more infomation scroll down to **Contributing**.
